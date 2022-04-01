@@ -17,6 +17,20 @@ def home(path):
 def hello():
     return str(random.randint(0, 100))
 
+"""
+TODO Handle Register
+Validate
+Check if user not exist else return(string) errorMessage
+Add user to db 
+Return user data
+"""
+
+"""
+TODO Handle Login
+Validate
+Return If ok user data else (string) errorMessage
+"""
+
 #TESTESTTEST
 #asssssssfasfdssdaf
 
