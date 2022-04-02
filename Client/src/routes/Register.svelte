@@ -1,3 +1,69 @@
+<script>
+  import { replace } from "svelte-spa-router";
+
+  let email = "";
+  let password = "";
+  let repPassword = "";
+  let errorMessage = "";
+  let error = false;
+
+  const handleRegister = async () => {
+    error = !valid();
+
+    if (!error) {
+      let user = { email, password, permission: "admin" };
+
+      //fetch server
+      //   const response = await fetch("?", {
+      //         method: 'POST',
+      //             'Content-Type': 'application/json',
+      //         },
+      //         body: JSON.stringify(user),
+      //     });
+
+      //   if (response.errorMessage) {
+      //     errorMessage = response.errorMessage;
+      //     return
+      //   }
+
+      localStorage.setItem("user", user);
+
+      replace("/");
+    } else {
+      errorMessage = "Please fill all inputs";
+    }
+  };
+
+  const valid = () => {
+    if (email && password && repPassword && password == repPassword) {
+      return true;
+    } else {
+      errorMessage = "Please fill all inputs";
+      return false;
+    }
+  };
+</script>
+
+<div class="centerContainer">
+  <h1>Register</h1>
+  <form class="userForm">
+    <label>Email</label>
+    <input type="email" bind:value={email} autocomplete="username" />
+    <label>Password</label>
+    <input type="password" autocomplete="new-password" bind:value={password} />
+    <label>Repeat password</label>
+    <input
+      type="password"
+      autocomplete="new-password"
+      bind:value={repPassword}
+    />
+    {#if error}
+      <p>{errorMessage}</p>
+    {/if}
+    <button class="userFormButton" on:click={handleRegister}>Register</button>
+  </form>
+</div>
+
 <style>
   .centerContainer {
     flex-direction: column;
@@ -29,73 +95,3 @@
     margin-top: 25px;
   }
 </style>
-
-<script>
-  import { replace } from "svelte-spa-router";
-
-  let email = "";
-  let password = "";
-  let repPassword = "";
-  let errorMessage = "";
-  let error = false;
-
-  const handleRegister = async () => {
-    error = !valid();
-
-    if (!error) {
-      let user = { email, password, permission: "admin" };
-
-      //fetch server
-      //   const response = await fetch("?", {
-      //         method: 'POST',
-      //             'Content-Type': 'application/json',
-      //         },
-      //         body: JSON.stringify(user),
-      //     });
-
-      //   if (response.errorMessage) {
-      //     errorMessage = response.errorMessage;
-      //     return
-      //   }
-
-      localStorage.setItem("user", JSON.stringify(user));
-
-      replace("/");
-    } else {
-      errorMessage = "Please fill all inputs";
-    }
-  };
-
-  const valid = () => {
-    if (email && password && repPassword && password == repPassword) {
-      return true;
-    } else {
-      errorMessage = "Please fill all inputs";
-      return false;
-    }
-  };
-</script>
-
-<div class="centerContainer">
-  <h1>Register</h1>
-  <form class="userForm">
-    <label>Email</label>
-    <input type="email" bind:value="{email}" autocomplete="username" />
-    <label>Password</label>
-    <input
-      type="password"
-      autocomplete="new-password"
-      bind:value="{password}"
-    />
-    <label>Repeat password</label>
-    <input
-      type="password"
-      autocomplete="new-password"
-      bind:value="{repPassword}"
-    />
-    {#if error}
-      <p>{errorMessage}</p>
-    {/if}
-    <button class="userFormButton" on:click="{handleRegister}">Register</button>
-  </form>
-</div>

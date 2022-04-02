@@ -20,6 +20,7 @@ def hello():
 """
 TODO Handle Register
 Validate
+user = { email, password, permission: "admin | permitted | user" };
 Check if user not exist else return(string) errorMessage
 Add user to db 
 Return user data
@@ -28,6 +29,7 @@ Return user data
 """
 TODO Handle Login
 Validate
+user = { email, password };
 Return If ok user data else (string) errorMessage
 """
 

@@ -1,3 +1,196 @@
+<script>
+  let components = JSON.parse(localStorage.getItem("configuration"));
+
+  const moveComponent = (index, direction, tab, callback) => {
+    if (direction == "up" && index > 0) {
+      [tab[index], tab[index - 1]] = [tab[index - 1], tab[index]];
+    }
+
+    if (direction == "down" && index < tab.length - 1) {
+      [tab[index], tab[index + 1]] = [tab[index + 1], tab[index]];
+    }
+
+    callback(tab);
+  };
+
+  const addComponent = () => {
+    components = [...components, { name: "", visible: true, news: [] }];
+  };
+
+  const deleteComponent = (index) => {
+    components = components.filter((comp, i) => i != index);
+  };
+
+  const addComponentNews = (index) => {
+    components = components.map((comp, i) => {
+      if (i == index) {
+        return {
+          ...comp,
+          news: [
+            {
+              title: "",
+              headline: "",
+              text: "",
+              link: "",
+            },
+          ],
+        };
+      } else {
+        return comp;
+      }
+    });
+  };
+
+  const deleteNews = (newsIndex, compIndex) => {
+    components = components.map((comp, i) => {
+      if (i == compIndex) {
+        comp.news = comp.news.filter((news, i) => i != newsIndex);
+      }
+      return comp;
+    });
+  };
+
+  const addNews = (compIndex) => {
+    components = components.map((comp, i) => {
+      if (i == compIndex) {
+        comp.news = [
+          ...comp.news,
+          {
+            title: "",
+            headline: "",
+            text: "",
+            link: "",
+          },
+        ];
+      }
+      return comp;
+    });
+  };
+</script>
+
+<div id="configContainer">
+  <h1>Configure componetns</h1>
+  <div id="componentContainer">
+    {#each components as comp, i}
+      <div id="component">
+        <div id="deleteComponent" on:click={() => deleteComponent(i)}>X</div>
+        <div id="componentName">{comp.name}</div>
+        <div id="componentObjects">
+          <button>Add slider</button>
+          <button on:click={() => addComponentNews(i)}>Add news</button>
+          <button>Add content</button>
+        </div>
+      </div>
+    {/each}
+  </div>
+
+  <h1>Configure position and visibility of elements</h1>
+  <div id="componentContainer">
+    {#each components as comp, i}
+      <div id="component">
+        <div id="positionVisibility">
+          <input type="checkbox" bind:checked={comp.visible} />
+        </div>
+        <input id="positionName" bind:value={comp.name} />
+        <div id="positionIndex">
+          <div
+            on:click={() => {
+              moveComponent(i, "up", components, (tab) => (components = tab));
+            }}
+          >
+            up
+          </div>
+          <div
+            on:click={() => {
+              moveComponent(i, "down", components, (tab) => (components = tab));
+            }}
+          >
+            down
+          </div>
+        </div>
+      </div>
+    {/each}
+    <button on:click={addComponent}>Add</button>
+  </div>
+  {#each components.map((comp, i) => {
+    if (comp.news) {
+      return { news: comp.news, compName: comp.name, compIndex: i };
+    }
+  }) as newsComponent}
+    {#if newsComponent.news.length > 0}
+      <h1>Configure {newsComponent.compName} news</h1>
+      <div id="componentContainer">
+        {#each newsComponent.news as news, newsIndex}
+          {#if newsIndex != 0}
+            <hr />
+          {/if}
+          <div id="component">
+            <div
+              id="deleteNews"
+              on:click={() => deleteNews(newsIndex, newsComponent.compIndex)}
+            >
+              X
+            </div>
+            <div id="newsData">
+              <div>
+                <label>Title</label>
+                <input bind:value={news.title} />
+              </div>
+              <div>
+                <label>Headline</label>
+                <input bind:value={news.headline} />
+              </div>
+              <div>
+                <label>Text</label>
+                <input bind:value={news.text} />
+              </div>
+              <div>
+                <label>Link</label>
+                <input bind:value={news.link} />
+              </div>
+            </div>
+            <div id="positionIndex">
+              <div
+                on:click={() => {
+                  moveComponent(
+                    newsIndex,
+                    "up",
+                    newsComponent.news,
+                    (tab) => (newsComponent.news = tab)
+                  );
+                }}
+              >
+                up
+              </div>
+              <div
+                on:click={() => {
+                  moveComponent(
+                    newsIndex,
+                    "down",
+                    newsComponent.news,
+                    (tab) => (newsComponent.news = tab)
+                  );
+                }}
+              >
+                down
+              </div>
+            </div>
+          </div>
+        {/each}
+        <div id="addNews" on:click={() => addNews(newsComponent.compIndex)}>
+          ADD
+        </div>
+      </div>
+    {/if}
+  {/each}
+  <button
+    on:click={() =>
+      localStorage.setItem("configuration", JSON.stringify(components))}
+    >SAVE</button
+  >
+  <span>{JSON.stringify(components, null, 5)}</span>
+</div>
+
 <style>
   #configContainer {
     display: flex;
@@ -7,16 +200,14 @@
     text-align: center;
   }
 
-  #positionContainer,
-  #newsContainer {
+  #componentContainer {
     width: 50%;
     border: 1px solid black;
     padding: 50px;
     border-radius: 10px;
   }
 
-  #position,
-  #news {
+  #component {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,161 +221,12 @@
 
   #newsData {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
   }
 
   #newsData > div {
-    margin: 0 50px;
+    margin: 0 10px;
   }
 </style>
-
-<script>
-  let componentPositions = [
-    { name: "Slider", visible: true },
-    { name: "News", visible: true },
-    { name: "Content", visible: true },
-  ];
-
-  let newsComponents = [
-    {
-      title: "News 1",
-      headline: "Special title treatment",
-      text: "Gdybyś nie istniała, miastu by wygodniej się żyło Jestem tu, byłem tam, zresztą w sumie, kto nie był? Jest tu cała WWA, z wyjątkiem Ciebie",
-      link: "/nothingnow",
-    },
-    {
-      title: "News 2",
-      headline: "Special title treatment",
-      text: "Idę ulicami, gapiąc się na panny hoże Czarne płaszcze, czarne rury no i czarne Roshe Rozbity iPhone 6, choć zarabia marne grosze",
-      link: "/nothingnow",
-    },
-  ];
-
-  const movePosition = (index, direction) => {
-    if (direction == "up" && index > 0) {
-      [componentPositions[index], componentPositions[index - 1]] = [
-        componentPositions[index - 1],
-        componentPositions[index],
-      ];
-    }
-
-    if (direction == "down" && index < componentPositions.length - 1) {
-      [componentPositions[index], componentPositions[index + 1]] = [
-        componentPositions[index + 1],
-        componentPositions[index],
-      ];
-    }
-  };
-
-  const moveNews = (index, direction) => {
-    if (direction == "up" && index > 0) {
-      [newsComponents[index], newsComponents[index - 1]] = [
-        newsComponents[index - 1],
-        newsComponents[index],
-      ];
-    }
-
-    if (direction == "down" && index < newsComponents.length - 1) {
-      [newsComponents[index], newsComponents[index + 1]] = [
-        newsComponents[index + 1],
-        newsComponents[index],
-      ];
-    }
-  };
-
-  const deleteNews = (index) => {
-    newsComponents = newsComponents.filter((news, i) => i != index);
-  };
-
-  const addNews = () => {
-    newsComponents = [
-      ...newsComponents,
-      {
-        title: "",
-        headline: "",
-        text: "",
-        link: "",
-      },
-    ];
-  };
-</script>
-
-<div id="configContainer">
-  <h1>Configure position and visibility of elements</h1>
-  <div id="positionContainer">
-    {#each componentPositions as comp, i}
-      <div id="position">
-        <div id="positionVisibility">
-          <input type="checkbox" bind:checked="{comp.visible}" />
-        </div>
-        <div id="positionName">{comp.name}</div>
-        <div id="positionIndex">
-          <div
-            on:click="{() => {
-              movePosition(i, 'up');
-            }}"
-          >
-            up
-          </div>
-          <div
-            on:click="{() => {
-              movePosition(i, 'down');
-            }}"
-          >
-            down
-          </div>
-        </div>
-      </div>
-    {/each}
-  </div>
-  <h1>Configure news</h1>
-  <div id="newsContainer">
-    {#each newsComponents as news, i}
-      {#if i != 0}
-        <hr />
-      {/if}
-      <div id="news">
-        <div id="deleteNews" on:click="{() => deleteNews(i)}">X</div>
-        <div id="newsData">
-          <div>
-            <label>Title</label>
-            <input bind:value="{news.title}" />
-          </div>
-          <div>
-            <label>Headline</label>
-            <input bind:value="{news.headline}" />
-          </div>
-          <div>
-            <label>Text</label>
-            <input bind:value="{news.text}" />
-          </div>
-          <div>
-            <label>Link</label>
-            <input bind:value="{news.link}" />
-          </div>
-        </div>
-        <div id="positionIndex">
-          <div
-            on:click="{() => {
-              moveNews(i, 'up');
-            }}"
-          >
-            up
-          </div>
-          <div
-            on:click="{() => {
-              moveNews(i, 'down');
-            }}"
-          >
-            down
-          </div>
-        </div>
-      </div>
-    {/each}
-    <div id="addNews" on:click="{addNews}">ADD</div>
-  </div>
-  <span>{JSON.stringify(componentPositions, null, 5)}</span>
-  <span>{JSON.stringify(newsComponents, null, 5)}</span>
-</div>
