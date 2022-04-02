@@ -3,7 +3,9 @@
 
   let user = JSON.parse(localStorage.getItem("user"));
 
-  let components = JSON.parse(localStorage.getItem("configuration"));
+  let configuration = JSON.parse(localStorage.getItem("configuration"));
+  let styles = configuration.styles;
+  let components = configuration.components;
 
   //May refresh permissions
 
@@ -13,42 +15,42 @@
   };
 </script>
 
-<div>
+<div class="homeContainer" style="font-size: {styles.fontSize};">
   <nav>
-    <div id="navItems">
+    <div class="navItems">
       <a>Icon</a>
       <a>Features</a>
       <a>Pricing</a>
       <a>FAQs</a>
       <a>About</a>
     </div>
-    <div id="userActions">
+    <div class="userActions">
       {#if !user}
-        <a href="/#/Login" id="login">Login</a>
-        <a href="/#/Register" id="register">Register</a>
+        <a href="/#/Login" class="login">Login</a>
+        <a href="/#/Register" class="register">Register</a>
       {/if}
 
       {#if user.permission == "admin"}
-        <a href="/#/Configuration" id="config">Configuration</a>
+        <a href="/#/Configuration" class="config">Configuration</a>
       {/if}
 
       {#if user}
-        <a href="/" id="logout" on:click={logout}>Logout</a>
+        <a href="/" class="logout" on:click={logout}>Logout</a>
       {/if}
     </div>
   </nav>
 
-  <div id="componentsContainer">
+  <div class="componentsContainer">
     {#each components as comp}
       {#if comp.visible}
         <div>
           <h1>{comp.name}</h1>
           {#if comp.news.length > 0}
-            <div id="newsContainer">
+            <div class="newsContainer">
               {#each comp.news as news}
-                <div id="newsSingle">
-                  <div id="newsTitle">{news.title}</div>
-                  <div id="newsContent">
+                <div class="newsSingle">
+                  <div class="newsTitle">{news.title}</div>
+                  <div class="newsContent">
                     <h2>{news.headline}</h2>
                     <p>{news.text}</p>
                     <a href={`/#/${news.link}`}>Go to {news.link}</a>
@@ -69,52 +71,62 @@
 
     <div id="news"></div>
 
-    <main></main>
+    <main></main> -->
 
-    <footer></footer> -->
+  <footer>Michał Dubrowski & Igor Białek 3P</footer>
 </div>
 
 <style>
+  @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
+
+  /*
+ font-family: 'Roboto', sans-serif;
+ font-family: 'Quicksand', sans-serif;
+ font-family: 'Inconsolata', monospace;
+ */
+
   nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
   }
 
-  #login,
-  #register,
-  #logout,
-  #config {
+  .login,
+  .register,
+  .logout,
+  .config {
     padding: 10px;
     margin: 10px;
   }
 
-  #login:hover,
-  #register:hover,
-  #logout:hover,
-  #config:hover {
+  .login:hover,
+  .register:hover,
+  .logout:hover,
+  .config:hover {
     text-decoration: none;
   }
 
-  #login,
-  #logout {
+  .login,
+  .logout {
     border: 1px solid green;
     border-radius: 10px;
     color: green;
   }
 
-  #register {
+  .register {
     border: 1px solid blue;
     border-radius: 10px;
     color: blue;
   }
 
-  #config {
+  .config {
     border: 1px solid orangered;
     border-radius: 10px;
     color: orangered;
   }
-  #componentsContainer {
+  .componentsContainer {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -122,51 +134,67 @@
     text-align: center;
   }
 
-  #componentsContainer > div {
+  .componentsContainer > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 
-  #newsContainer {
+  .newsContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
-  #newsSingle {
-    width: 25%;
+  .newsSingle {
     margin: 50px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: gainsboro;
+    align-items: stretch;
+    width: 25%;
   }
 
-  #newsTitle {
+  .newsTitle {
+    padding: 10px;
     background-color: gray;
-    width: 100%;
-    color: white;
     text-align: left;
+    color: white;
   }
 
-  #newsContent h2 {
+  .newsContent h2 {
     margin: 0;
   }
 
-  #newsContent {
+  .newsContent {
+    padding: 25px;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 25px;
+    justify-content: space-between;
     text-align: left;
+    color: white;
+    background-color: darkgray;
   }
 
-  #newsContent a {
-    background-color: darkgray;
+  .newsContent a {
     padding: 10px;
+    color: white;
+    background-color: rgb(59, 59, 59);
+    align-self: start;
+  }
+
+  .homeContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 25px;
+  }
+
+  footer {
+    width: 300px;
+    position: fixed;
+    bottom: 20px;
+    right: calc(50% - 185px);
   }
 </style>

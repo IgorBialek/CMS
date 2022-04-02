@@ -1,5 +1,9 @@
 <script>
-  let components = JSON.parse(localStorage.getItem("configuration"));
+  import { push } from "svelte-spa-router";
+
+  let configuration = JSON.parse(localStorage.getItem("configuration"));
+  let components = configuration.components;
+  let styles = configuration.styles;
 
   const moveComponent = (index, direction, tab, callback) => {
     if (direction == "up" && index > 0) {
@@ -69,7 +73,65 @@
 </script>
 
 <div id="configContainer">
-  <h1>Configure componetns</h1>
+  <h1>Configure styles</h1>
+  <div id="componentContainer">
+    <div id="fontContainer">
+      <div>
+        <label>Font family</label>
+        <select
+          bind:value={styles.selectedFont}
+          on:input={(e) => {
+            styles.selectedFont = e.target.value;
+          }}
+        >
+          <option>Roboto</option>
+          <option>Quicksand</option>
+          <option>Inconsolata</option>
+        </select>
+      </div>
+      <div>
+        <label>Font size</label>
+        <input type="number" bind:value={styles.fontSize} />
+      </div>
+      <div>
+        <label>Colors</label>
+        <select
+          bind:value={styles.selectedColor}
+          on:input={(e) => {
+            styles.selectedColor = e.target.value;
+            console.log(styles.selectedColor);
+          }}
+        >
+          {#each styles.colors as colorSet, i}
+            <option value={i}>
+              {i}
+            </option>
+          {/each}
+        </select>
+      </div>
+    </div>
+    <div class="colorsContainer">
+      {#each styles.colors as colorSet, i}
+        <div class="singleColor">
+          <p>{i}.</p>
+          <div
+            class="colorBubble"
+            style="background-color: {colorSet.lightColor};"
+          />
+          <div
+            class="colorBubble"
+            style="background-color: {colorSet.mediumColor};"
+          />
+          <div
+            class="colorBubble"
+            style="background-color: {colorSet.darkColor};"
+          />
+        </div>
+      {/each}
+    </div>
+  </div>
+
+  <h1>Configure components</h1>
   <div id="componentContainer">
     {#each components as comp, i}
       <div id="component">
@@ -184,11 +246,13 @@
     {/if}
   {/each}
   <button
-    on:click={() =>
-      localStorage.setItem("configuration", JSON.stringify(components))}
-    >SAVE</button
+    on:click={() => {
+      configuration.components = components;
+      configuration.styles = styles;
+      localStorage.setItem("configuration", JSON.stringify(configuration));
+      push("/");
+    }}>SAVE</button
   >
-  <span>{JSON.stringify(components, null, 5)}</span>
 </div>
 
 <style>
@@ -227,6 +291,39 @@
   }
 
   #newsData > div {
+    width: 100%;
     margin: 0 10px;
+  }
+
+  #fontContainer {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  label {
+    margin: 5px;
+  }
+
+  .colorsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .singleColor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .singleColor > div {
+    margin: 5px;
+  }
+
+  .colorBubble {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
   }
 </style>
