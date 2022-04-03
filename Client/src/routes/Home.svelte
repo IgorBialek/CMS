@@ -15,7 +15,12 @@
   };
 </script>
 
-<div class="homeContainer" style="font-size: {styles.fontSize};">
+<div
+  class="homeContainer"
+  style="--fontSize: {styles.fontSize}px; --fontFamily: {styles.selectedFont}; --lightColor: {styles
+    .colors.lightColor}; --mediumColor: {styles.colors
+    .mediumColor}; --darkColor: {styles.colors.darkColor};"
+>
   <nav>
     <div class="navItems">
       <a>Icon</a>
@@ -79,13 +84,17 @@
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
-
+  @import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
   /*
  font-family: 'Roboto', sans-serif;
  font-family: 'Quicksand', sans-serif;
- font-family: 'Inconsolata', monospace;
+font-family: 'Oswald', sans-serif;
  */
+
+  .homeContainer {
+    font-size: var(--fontSize);
+    font-family: var(--fontFamily), sans-serif;
+  }
 
   nav {
     display: flex;
@@ -158,7 +167,7 @@
 
   .newsTitle {
     padding: 10px;
-    background-color: gray;
+    background-color: var(--mediumColor);
     text-align: left;
     color: white;
   }
@@ -175,13 +184,13 @@
     justify-content: space-between;
     text-align: left;
     color: white;
-    background-color: darkgray;
+    background-color: var(--lightColor);
   }
 
   .newsContent a {
     padding: 10px;
     color: white;
-    background-color: rgb(59, 59, 59);
+    background-color: var(--darkColor);
     align-self: start;
   }
 
@@ -192,9 +201,7 @@
   }
 
   footer {
-    width: 300px;
-    position: fixed;
-    bottom: 20px;
-    right: calc(50% - 185px);
+    display: flex;
+    justify-content: center;
   }
 </style>

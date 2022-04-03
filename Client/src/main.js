@@ -7,24 +7,11 @@ if (!localStorage.getItem("configuration")) {
       styles: {
         fontSize: 16,
         selectedFont: "Roboto",
-        selectedColor: 0,
-        colors: [
-          {
-            lightColor: "#3a506b",
-            mediumColor: "#1c2541",
-            darkColor: "#0b132b",
-          },
-          {
-            lightColor: "#f3e9dc",
-            mediumColor: "#c08552",
-            darkColor: "#5e3023",
-          },
-          {
-            lightColor: "#ada8b6",
-            mediumColor: "#ffeedb",
-            darkColor: "#4c3b4d",
-          },
-        ],
+        colors: {
+          lightColor: "#f3e9dc",
+          mediumColor: "#c08552",
+          darkColor: "#5e3023",
+        },
       },
       components: [
         {

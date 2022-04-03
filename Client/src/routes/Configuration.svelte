@@ -86,7 +86,7 @@
         >
           <option>Roboto</option>
           <option>Quicksand</option>
-          <option>Inconsolata</option>
+          <option>Oswald</option>
         </select>
       </div>
       <div>
@@ -95,39 +95,12 @@
       </div>
       <div>
         <label>Colors</label>
-        <select
-          bind:value={styles.selectedColor}
-          on:input={(e) => {
-            styles.selectedColor = e.target.value;
-            console.log(styles.selectedColor);
-          }}
-        >
-          {#each styles.colors as colorSet, i}
-            <option value={i}>
-              {i}
-            </option>
-          {/each}
-        </select>
-      </div>
-    </div>
-    <div class="colorsContainer">
-      {#each styles.colors as colorSet, i}
-        <div class="singleColor">
-          <p>{i}.</p>
-          <div
-            class="colorBubble"
-            style="background-color: {colorSet.lightColor};"
-          />
-          <div
-            class="colorBubble"
-            style="background-color: {colorSet.mediumColor};"
-          />
-          <div
-            class="colorBubble"
-            style="background-color: {colorSet.darkColor};"
-          />
+        <div>
+          <input type="color" bind:value={styles.colors.lightColor} />
+          <input type="color" bind:value={styles.colors.mediumColor} />
+          <input type="color" bind:value={styles.colors.darkColor} />
         </div>
-      {/each}
+      </div>
     </div>
   </div>
 
@@ -304,26 +277,20 @@
     margin: 5px;
   }
 
-  .colorsContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .singleColor {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .singleColor > div {
+  input[type="color"] {
+    -webkit-appearance: none;
+    border: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     margin: 5px;
   }
-
-  .colorBubble {
-    width: 20px;
-    height: 20px;
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
     border-radius: 50%;
   }
 </style>
