@@ -75,13 +75,17 @@
   const templateChangeHandler = (e) => {
     components = configuration.templates[e.target.value].components;
     styles = configuration.templates[e.target.value].styles;
+    configuration.selectedTemplate = e.target.value;
   };
 </script>
 
 <div id="configContainer">
   <h1>Select template</h1>
   <div id="componentContainer">
-    <select on:input={templateChangeHandler}>
+    <select
+      on:input={templateChangeHandler}
+      bind:value={configuration.selectedTemplate}
+    >
       {#each configuration.templates as template, i}
         <option value={i}>{i}</option>
       {/each}
