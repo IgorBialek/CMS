@@ -4,8 +4,9 @@
   let user = JSON.parse(localStorage.getItem("user"));
 
   let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let styles = configuration.styles;
-  let components = configuration.components;
+  let styles = configuration.templates[configuration.selectedTemplate].styles;
+  let components =
+    configuration.templates[configuration.selectedTemplate].components;
 
   //May refresh permissions
 
@@ -35,7 +36,7 @@
         <a href="/#/Register" class="register">Register</a>
       {/if}
 
-      {#if user.permission == "admin"}
+      {#if user && user.permission == "admin"}
         <a href="/#/Configuration" class="config">Configuration</a>
       {/if}
 

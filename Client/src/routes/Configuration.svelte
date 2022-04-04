@@ -2,8 +2,9 @@
   import { push } from "svelte-spa-router";
 
   let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let components = configuration.components;
-  let styles = configuration.styles;
+  let components =
+    configuration.templates[configuration.selectedTemplate].components;
+  let styles = configuration.templates[configuration.selectedTemplate].styles;
 
   const moveComponent = (index, direction, tab, callback) => {
     if (direction == "up" && index > 0) {
@@ -70,9 +71,23 @@
       return comp;
     });
   };
+
+  const templateChangeHandler = (e) => {
+    components = configuration.templates[e.target.value].components;
+    styles = configuration.templates[e.target.value].styles;
+  };
 </script>
 
 <div id="configContainer">
+  <h1>Select template</h1>
+  <div id="componentContainer">
+    <select on:input={templateChangeHandler}>
+      {#each configuration.templates as template, i}
+        <option value={i}>{i}</option>
+      {/each}
+    </select>
+  </div>
+
   <h1>Configure styles</h1>
   <div id="componentContainer">
     <div id="fontContainer">
