@@ -7,6 +7,14 @@ if (!localStorage.getItem("configuration")) {
       selectedTemplate: 0,
       templates: [
         {
+          name: "First template",
+          menu: {
+            type: "horizontal",
+            articles: [
+              { title: "TEST1", text: "55555555", link: "test" },
+              { title: "TEST2", text: "666666666", link: "test2" },
+            ],
+          },
           styles: {
             fontSize: 16,
             selectedFont: "Roboto",
@@ -44,6 +52,14 @@ if (!localStorage.getItem("configuration")) {
           ],
         },
         {
+          name: "Second template",
+          menu: {
+            type: "vertical",
+            articles: [
+              { title: "TEST3", text: "77777777", link: "test3" },
+              { title: "TEST4", text: "888888888", link: "test4" },
+            ],
+          },
           styles: {
             fontSize: 14,
             selectedFont: "Roboto",

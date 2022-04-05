@@ -5,6 +5,7 @@
   let components =
     configuration.templates[configuration.selectedTemplate].components;
   let styles = configuration.templates[configuration.selectedTemplate].styles;
+  let menu = configuration.templates[configuration.selectedTemplate].menu;
 
   const moveComponent = (index, direction, tab, callback) => {
     if (direction == "up" && index > 0) {
@@ -20,6 +21,7 @@
 
   const addComponent = () => {
     components = [...components, { name: "", visible: true, news: [] }];
+    console.log(components);
   };
 
   const deleteComponent = (index) => {
@@ -77,19 +79,132 @@
     styles = configuration.templates[e.target.value].styles;
     configuration.selectedTemplate = e.target.value;
   };
+
+  let newTemplateName = "";
+
+  const addTemplate = () => {
+    configuration.templates = [
+      ...configuration.templates,
+      {
+        name: newTemplateName,
+        menu: {
+          type: "horizontal",
+          articles: [],
+        },
+        styles: {
+          fontSize: 16,
+          selectedFont: "Roboto",
+          colors: {
+            lightColor: "#edf2f4",
+            mediumColor: "#8d99ae",
+            darkColor: "#2b2d42",
+          },
+        },
+        components: [],
+      },
+    ];
+
+    newTemplateName = "";
+  };
+
+  const deleteArticle = (index) => {
+    menu.articles = menu.articles.filter((article, i) => i != index);
+  };
 </script>
 
 <div id="configContainer">
-  <h1>Select template</h1>
+  <h1>Configure templates</h1>
   <div id="componentContainer">
-    <select
-      on:input={templateChangeHandler}
-      bind:value={configuration.selectedTemplate}
-    >
-      {#each configuration.templates as template, i}
-        <option value={i}>{i}</option>
+    <input type="text" bind:value={newTemplateName} />
+    <button on:click={addTemplate}>Add template</button>
+    <div class="template">
+      <p>Select template</p>
+      <select
+        on:input={templateChangeHandler}
+        bind:value={configuration.selectedTemplate}
+      >
+        {#each configuration.templates as template, i}
+          <option value={i}>{template.name}</option>
+        {/each}
+      </select>
+    </div>
+  </div>
+
+  <h1>Configure menu</h1>
+  <div id="componentContainer">
+    <div id="menu">
+      <label>Horizontal</label>
+      <input
+        type="radio"
+        name="menu"
+        checked
+        on:change={() => {
+          menu.type = "horizontal";
+        }}
+      />
+      <label>Vertical</label>
+      <input
+        type="radio"
+        name="menu"
+        on:change={() => {
+          menu.type = "vertical";
+        }}
+      />
+    </div>
+    <div id="articles">
+      <h2>Articles</h2>
+      {#each menu.articles as article, i}
+        <div id="article">
+          <div
+            on:click={() => {
+              deleteArticle(i);
+            }}
+          >
+            X
+          </div>
+          <div class="inputs">
+            <div class="data">
+              <label>Title</label>
+              <input type="text" bind:value={article.title} />
+            </div>
+            <div class="data">
+              <label>Text</label>
+              <input type="text" bind:value={article.text} />
+            </div>
+            <div class="data">
+              <label>Link</label>
+              <input type="text" bind:value={article.link} />
+            </div>
+          </div>
+          <div id="positionIndex">
+            <div
+              on:click={() => {
+                moveComponent(
+                  i,
+                  "up",
+                  menu.articles,
+                  (tab) => (menu.articles = tab)
+                );
+              }}
+            >
+              up
+            </div>
+            <div
+              on:click={() => {
+                moveComponent(
+                  i,
+                  "down",
+                  menu.articles,
+                  (tab) => (menu.articles = tab)
+                );
+              }}
+            >
+              down
+            </div>
+          </div>
+        </div>
       {/each}
-    </select>
+    </div>
   </div>
 
   <h1>Configure styles</h1>
@@ -239,8 +354,11 @@
   {/each}
   <button
     on:click={() => {
-      configuration.components = components;
-      configuration.styles = styles;
+      configuration.templates[configuration.selectedTemplate].components =
+        components;
+      configuration.templates[configuration.selectedTemplate].styles = styles;
+      configuration.templates[configuration.selectedTemplate].menu = menu;
+
       localStorage.setItem("configuration", JSON.stringify(configuration));
       push("/");
     }}>SAVE</button
@@ -311,5 +429,42 @@
   input[type="color"]::-webkit-color-swatch {
     border: none;
     border-radius: 50%;
+  }
+
+  .template {
+    display: flex;
+    justify-content: center;
+  }
+
+  .template select {
+    margin: 5px;
+  }
+
+  #menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #menu input {
+    padding: 0;
+    margin: 0;
+  }
+
+  .inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .data input {
+    margin: 5px;
+    width: 100px;
+  }
+
+  #article {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
   }
 </style>

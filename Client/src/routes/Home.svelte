@@ -7,6 +7,7 @@
   let styles = configuration.templates[configuration.selectedTemplate].styles;
   let components =
     configuration.templates[configuration.selectedTemplate].components;
+  let menu = configuration.templates[configuration.selectedTemplate].menu;
 
   //May refresh permissions
 
@@ -20,15 +21,14 @@
   class="homeContainer"
   style="--fontSize: {styles.fontSize}px; --fontFamily: {styles.selectedFont}; --lightColor: {styles
     .colors.lightColor}; --mediumColor: {styles.colors
-    .mediumColor}; --darkColor: {styles.colors.darkColor};"
+    .mediumColor}; --darkColor: {styles.colors
+    .darkColor}; --navDirection: {menu.type == 'vertical' ? 'column' : 'none'}"
 >
   <nav>
     <div class="navItems">
-      <a>Icon</a>
-      <a>Features</a>
-      <a>Pricing</a>
-      <a>FAQs</a>
-      <a>About</a>
+      {#each menu.articles as article}
+        <a href={`/#/article/${article.link}`}>{article.title}</a>
+      {/each}
     </div>
     <div class="userActions">
       {#if !user}
@@ -98,9 +98,24 @@ font-family: 'Oswald', sans-serif;
   }
 
   nav {
+    width: 100%;
+    position: relative;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
+  }
+
+  .navItems {
+    display: flex;
+    flex-direction: var(--navDirection);
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .navItems > a {
+    margin: 0 10px;
+    margin-bottom: 10px;
   }
 
   .login,
