@@ -1,35 +1,3 @@
-<style>
-  .centerContainer {
-    flex-direction: column;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .userForm {
-    padding: 25px;
-    border-radius: 10px;
-    border: 1px solid black;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .userForm label {
-    margin: 5px 0;
-  }
-
-  .userForm input {
-    width: 250px;
-  }
-
-  .userFormButton {
-    align-self: center;
-    width: 100px;
-    margin-top: 25px;
-  }
-</style>
-
 <script>
   import { replace } from "svelte-spa-router";
 
@@ -77,18 +45,46 @@
 
 <div class="centerContainer">
   <h1>Login</h1>
-  <form class="userForm">
+  <div class="userForm">
     <label>Email</label>
-    <input type="email" bind:value="{email}" autocomplete="username" />
+    <input type="email" bind:value={email} autocomplete="username" />
     <label>Password</label>
-    <input
-      type="password"
-      autocomplete="new-password"
-      bind:value="{password}"
-    />
+    <input type="password" autocomplete="new-password" bind:value={password} />
     {#if error}
       <p>{errorMessage}</p>
     {/if}
-    <button class="userFormButton" on:click="{handleRegister}">Login</button>
-  </form>
+    <button class="userFormButton" on:click={handleRegister}>Login</button>
+  </div>
 </div>
+
+<style>
+  .centerContainer {
+    flex-direction: column;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .userForm {
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .userForm label {
+    margin: 5px 0;
+  }
+
+  .userForm input {
+    width: 250px;
+  }
+
+  .userFormButton {
+    align-self: center;
+    width: 100px;
+    margin-top: 25px;
+  }
+</style>

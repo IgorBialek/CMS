@@ -11,6 +11,8 @@ def base():
 # Path for all the static files (compiled JS/CSS, etc.)
 @app.route("/<path:path>")
 def home(path):
+    print("!!!", path)
+
     return send_from_directory('Client/public', path)
 
 @app.route("/rand")
@@ -28,17 +30,10 @@ Return user data
 
 #dfddddddddddddd
 
-@app.route("/register", methods=['GET', 'POST'])
+@app.route("/register", methods=["POST"])
 def register():
 
-    if request.method == 'POST':
-        print("POST")
-        data = request.get_json()
-        print(data)
-    else:
-        print("NIE POST")
-
-
+    data = request.get_json()
     email_server = data['email']
     password_server = data['password']
     print(email_server)

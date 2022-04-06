@@ -13,27 +13,24 @@
     if (!error) {
       let user = { email, password, permission: "admin" };
 
-      console.log("Dane posyłane do serwera: ")
-      console.log(JSON.stringify(user))
-
       //fetch server
-        const response = await fetch("/register", {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },      
-              body: JSON.stringify(user)
-          });
+      const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(user),
+      });
 
-        console.log(response)
+      console.log(response);
 
-        if (response.errorMessage) {
-          errorMessage = response.errorMessage;
-          return
-        }
+      if (response.errorMessage) {
+        errorMessage = response.errorMessage;
+        return;
+      }
 
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(response));
 
       replace("/");
     } else {
@@ -53,7 +50,7 @@
 
 <div class="centerContainer">
   <h1>Register</h1>
-  <form class="userForm">
+  <div class="userForm">
     <label>Email</label>
     <input type="email" bind:value={email} autocomplete="username" />
     <label>Password</label>
@@ -68,7 +65,7 @@
       <p>{errorMessage}</p>
     {/if}
     <button class="userFormButton" on:click={handleRegister}>Register</button>
-  </form>
+  </div>
 </div>
 
 <style>
