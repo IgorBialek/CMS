@@ -228,7 +228,7 @@
   <h1>Configure Footer</h1>
   <div id="componentContainer">
     <div id="footerLinks">
-      <h2>Articles</h2>
+      <h2>Links</h2>
       {#each footer.links as link, i}
         <div id="footerLink">
           <div
@@ -431,6 +431,15 @@
       </div>
     {/if}
   {/each}
+
+  <!--CONFIGURE COMPONENT SLIDER-->
+  {#each components as comp}
+      {#if comp.slider}
+        <h1></h1>
+        <div id="componentConfigure"></div>
+      {/if}
+  {/each}
+
   <button
     on:click={() => {
       configuration.templates[configuration.selectedTemplate].components =

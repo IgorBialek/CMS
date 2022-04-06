@@ -32,6 +32,7 @@ if (!localStorage.getItem("configuration")) {
               name: "Slider",
               visible: true,
               news: [],
+              slider: null
             },
             {
               name: "News",
@@ -50,6 +51,7 @@ if (!localStorage.getItem("configuration")) {
                   link: "nothingnow",
                 },
               ],
+              slider: null
             },
             { name: "Content", visible: true, news: [] },
           ],
@@ -80,6 +82,7 @@ if (!localStorage.getItem("configuration")) {
               name: "Slider",
               visible: true,
               news: [],
+              slider: null
             },
             {
               name: "News",
@@ -92,6 +95,7 @@ if (!localStorage.getItem("configuration")) {
                   link: "nothingnow",
                 },
               ],
+              slider: null
             },
             { name: "Content", visible: true, news: [] },
           ],
