@@ -3,6 +3,13 @@ import random
 
 app = Flask(__name__)
 
+"""
+TODO Connect MongoDB
+Handle users
+Save configuration as one big JSON
+Figure out how to use GridFS to save images and what format of files you will need
+"""
+
 # Path for our main Svelte page
 @app.route("/")
 def base():
@@ -11,8 +18,6 @@ def base():
 # Path for all the static files (compiled JS/CSS, etc.)
 @app.route("/<path:path>")
 def home(path):
-    print("!!!", path)
-
     return send_from_directory('Client/public', path)
 
 @app.route("/rand")
@@ -36,11 +41,13 @@ def register():
     data = request.get_json()
     email_server = data['email']
     password_server = data['password']
+    permission_server = data['permission']
     print(email_server)
     print(password_server)
     return jsonify({
         'email': email_server,
-        'password': password_server
+        'password': password_server,
+        'permission':permission_server
     })
 
 """

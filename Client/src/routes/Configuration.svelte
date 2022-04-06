@@ -49,6 +49,19 @@
     });
   };
 
+  const addComponentSlider = (index) => {
+    components = components.map((comp, i) => {
+      if (i == index) {
+        return {
+          ...comp,
+          slider: { images: [], description: "", switchTime: null },
+        };
+      } else {
+        return comp;
+      }
+    });
+  };
+
   const deleteNews = (newsIndex, compIndex) => {
     components = components.map((comp, i) => {
       if (i == compIndex) {
@@ -113,20 +126,35 @@
   };
 
   const addArticle = () => {
-    menu.articles = [...menu.articles, { title: "", text: "", link: "" }]
-  }
+    menu.articles = [...menu.articles, { title: "", text: "", link: "" }];
+  };
 
   const deleteLink = (index) => {
     footer.links = footer.links.filter((link, i) => i != index);
   };
 
   const addLink = () => {
-    footer.links = [...footer.links, { title: "", link: "" }]
-  }
+    footer.links = [...footer.links, { title: "", link: "" }];
+  };
+
+  const imageHandler = ({ target: { files } }) => {
+    document.getElementById("uploadedImages").innerHTML = "";
+
+    for (let i = 0; i < files.length; i++) {
+      var reader = new FileReader();
+
+      reader.onload = function (frEvent) {
+        document.getElementById(
+          "uploadedImages"
+        ).innerHTML += `<div style="height: 50px; width: 50px;"><img style='max-height: 100%;max-width: 100%;' src="${frEvent.target.result}" /></div>`;
+      };
+      console.log(files[i]);
+      reader.readAsDataURL(files[i]);
+    }
+  };
 </script>
 
 <div id="configContainer">
-
   <!--CONFIGURE TEMPLATES-->
   <h1>Configure templates</h1>
   <div id="componentContainer">
@@ -220,7 +248,7 @@
           </div>
         </div>
       {/each}
-      <button on:click="{addArticle}">Add article</button>
+      <button on:click={addArticle}>Add article</button>
     </div>
   </div>
 
@@ -276,10 +304,9 @@
           </div>
         </div>
       {/each}
-      <button on:click="{addLink}">Add link</button>
+      <button on:click={addLink}>Add link</button>
     </div>
   </div>
-
 
   <!--CONFIGURE STYLES-->
   <h1>Configure styles</h1>
@@ -321,7 +348,7 @@
         <div id="deleteComponent" on:click={() => deleteComponent(i)}>X</div>
         <div id="componentName">{comp.name}</div>
         <div id="componentObjects">
-          <button>Add slider</button>
+          <button on:click={() => addComponentSlider(i)}>Add slider</button>
           <button on:click={() => addComponentNews(i)}>Add news</button>
           <button>Add content</button>
         </div>
@@ -329,7 +356,7 @@
     {/each}
   </div>
 
-    <!--CONFIGURE COMPONENTS POSITION-->
+  <!--CONFIGURE COMPONENTS POSITION-->
   <h1>Configure position and visibility of elements</h1>
   <div id="componentContainer">
     {#each components as comp, i}
@@ -433,11 +460,36 @@
   {/each}
 
   <!--CONFIGURE COMPONENT SLIDER-->
-  {#each components as comp}
-      {#if comp.slider}
-        <h1></h1>
-        <div id="componentConfigure"></div>
-      {/if}
+  {#each components
+    .filter((comp) => comp.slider)
+    .map((comp, i) => {
+      return { slider: comp.slider, compName: comp.name, compIndex: i };
+    }) as sliderComponent}
+    <h1>
+      Configure {sliderComponent.compName} slider
+    </h1>
+    <div id="componentContainer">
+      <div id="component">
+        <div class="data fileInput">
+          <label>Images</label>
+          <input
+            type="file"
+            multiple
+            accept=".jpg,.png"
+            on:change={imageHandler}
+          />
+        </div>
+        <div class="data">
+          <label>Description</label>
+          <input type="text" bind:value={sliderComponent.slider.description} />
+        </div>
+        <div class="data ">
+          <label>Switch time (seconds)</label>
+          <input type="number" bind:value={sliderComponent.slider.switchTime} />
+        </div>
+      </div>
+      <div id="uploadedImages" />
+    </div>
   {/each}
 
   <button
@@ -561,6 +613,17 @@
   #footerLink {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .fileInput input {
+    width: 200px;
+  }
+
+  #uploadedImages {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
 </style>

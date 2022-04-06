@@ -83,7 +83,7 @@
   <footer>
     <div class="footer">
       {#each footer.links as link}
-      <a href={`/#/${link.link}`}>{link.title}</a>
+        <a href={`/#/${link.link}`}>{link.title}</a>
       {/each}
     </div>
     <div>Michał Dubrowski & Igor Białek 3P</div>
@@ -130,7 +130,7 @@ font-family: 'Oswald', sans-serif;
     display: flex;
     flex-direction: var(--navDirection);
     align-items: center;
-    justify-content: center;;
+    justify-content: center;
   }
 
   .navItems > a {

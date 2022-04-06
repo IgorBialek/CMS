@@ -14,7 +14,7 @@
       let user = { email, password, permission: "admin" };
 
       //fetch server
-      const response = await fetch("/register", {
+      const res = await fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -22,6 +22,8 @@
         },
         body: JSON.stringify(user),
       });
+
+      const response = await res.json();
 
       console.log(response);
 

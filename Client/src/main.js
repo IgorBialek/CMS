@@ -16,7 +16,11 @@ if (!localStorage.getItem("configuration")) {
             ],
           },
           footer: {
-            links: [{title: "article", link: "test"}, {title: "article2", link:"test2"}, {title:"article3", link:"test3"}]
+            links: [
+              { title: "article", link: "test" },
+              { title: "article2", link: "test2" },
+              { title: "article3", link: "test3" },
+            ],
           },
           styles: {
             fontSize: 16,
@@ -32,7 +36,7 @@ if (!localStorage.getItem("configuration")) {
               name: "Slider",
               visible: true,
               news: [],
-              slider: null
+              slider: null,
             },
             {
               name: "News",
@@ -51,9 +55,9 @@ if (!localStorage.getItem("configuration")) {
                   link: "nothingnow",
                 },
               ],
-              slider: null
+              slider: null,
             },
-            { name: "Content", visible: true, news: [] },
+            { name: "Content", visible: true, news: [], slider: null },
           ],
         },
         {
@@ -66,7 +70,10 @@ if (!localStorage.getItem("configuration")) {
             ],
           },
           footer: {
-            links: [{title: "article", link: "test"}, {title: "article2", link:"test2"}]
+            links: [
+              { title: "article", link: "test" },
+              { title: "article2", link: "test2" },
+            ],
           },
           styles: {
             fontSize: 14,
@@ -82,7 +89,7 @@ if (!localStorage.getItem("configuration")) {
               name: "Slider",
               visible: true,
               news: [],
-              slider: null
+              slider: null,
             },
             {
               name: "News",
@@ -95,9 +102,9 @@ if (!localStorage.getItem("configuration")) {
                   link: "nothingnow",
                 },
               ],
-              slider: null
+              slider: null,
             },
-            { name: "Content", visible: true, news: [] },
+            { name: "Content", visible: true, news: [], slider: null },
           ],
         },
       ],
