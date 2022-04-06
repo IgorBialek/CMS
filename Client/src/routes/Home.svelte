@@ -8,6 +8,7 @@
   let components =
     configuration.templates[configuration.selectedTemplate].components;
   let menu = configuration.templates[configuration.selectedTemplate].menu;
+  let footer = configuration.templates[configuration.selectedTemplate].footer;
 
   //May refresh permissions
 
@@ -79,7 +80,14 @@
 
     <main></main> -->
 
-  <footer>Michał Dubrowski & Igor Białek 3P</footer>
+  <footer>
+    <div class="footer">
+      {#each footer.links as link}
+      <a href={`/#/${link.link}`}>{link.title}</a>
+      {/each}
+    </div>
+    <div>Michał Dubrowski & Igor Białek 3P</div>
+  </footer>
 </div>
 
 <style>
@@ -93,29 +101,40 @@ font-family: 'Oswald', sans-serif;
  */
 
   .homeContainer {
+    margin: 0 !important;
     font-size: var(--fontSize);
     font-family: var(--fontFamily), sans-serif;
   }
 
   nav {
     width: 100%;
+    height: 75px;
     position: relative;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
   }
 
+  .userActions {
+    margin: 25px;
+    display: flex;
+  }
+
+  .userActions > a {
+    margin: 10px;
+  }
+
   .navItems {
+    margin: 25px;
+    height: 100%;
     display: flex;
     flex-direction: var(--navDirection);
-    position: absolute;
-    left: 0;
-    top: 0;
+    align-items: center;
+    justify-content: center;;
   }
 
   .navItems > a {
-    margin: 0 10px;
-    margin-bottom: 10px;
+    margin: 10px;
   }
 
   .login,
@@ -123,7 +142,6 @@ font-family: 'Oswald', sans-serif;
   .logout,
   .config {
     padding: 10px;
-    margin: 10px;
   }
 
   .login:hover,
@@ -217,7 +235,17 @@ font-family: 'Oswald', sans-serif;
   }
 
   footer {
+    border-top: 1px solid black;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .footer {
+    width: 33%;
+    margin: 15px;
+    display: flex;
+    justify-content: space-around;
   }
 </style>

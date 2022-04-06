@@ -15,6 +15,9 @@ if (!localStorage.getItem("configuration")) {
               { title: "TEST2", text: "666666666", link: "test2" },
             ],
           },
+          footer: {
+            links: [{title: "article", link: "test"}, {title: "article2", link:"test2"}, {title:"article3", link:"test3"}]
+          },
           styles: {
             fontSize: 16,
             selectedFont: "Roboto",
@@ -59,6 +62,9 @@ if (!localStorage.getItem("configuration")) {
               { title: "TEST3", text: "77777777", link: "test3" },
               { title: "TEST4", text: "888888888", link: "test4" },
             ],
+          },
+          footer: {
+            links: [{title: "article", link: "test"}, {title: "article2", link:"test2"}]
           },
           styles: {
             fontSize: 14,

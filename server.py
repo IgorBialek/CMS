@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request, jsonify
 import random
 
 app = Flask(__name__)
@@ -25,6 +25,27 @@ Check if user not exist else return(string) errorMessage
 Add user to db 
 Return user data
 """
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+
+    if request.method == 'POST':
+        print("POST")
+        data = request.get_json()
+        print(data)
+    else:
+        print("NIE POST")
+
+
+    email_server = data['email']
+    password_server = data['password']
+    print(email_server)
+    print(password_server)
+    return jsonify({
+        'email': email_server,
+        'password': password_server
+    })
 
 """
 TODO Handle Login

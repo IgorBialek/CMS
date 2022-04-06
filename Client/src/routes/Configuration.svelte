@@ -6,6 +6,7 @@
     configuration.templates[configuration.selectedTemplate].components;
   let styles = configuration.templates[configuration.selectedTemplate].styles;
   let menu = configuration.templates[configuration.selectedTemplate].menu;
+  let footer = configuration.templates[configuration.selectedTemplate].footer;
 
   const moveComponent = (index, direction, tab, callback) => {
     if (direction == "up" && index > 0) {
@@ -110,9 +111,23 @@
   const deleteArticle = (index) => {
     menu.articles = menu.articles.filter((article, i) => i != index);
   };
+
+  const addArticle = () => {
+    menu.articles = [...menu.articles, { title: "", text: "", link: "" }]
+  }
+
+  const deleteLink = (index) => {
+    footer.links = footer.links.filter((link, i) => i != index);
+  };
+
+  const addLink = () => {
+    footer.links = [...footer.links, { title: "", link: "" }]
+  }
 </script>
 
 <div id="configContainer">
+
+  <!--CONFIGURE TEMPLATES-->
   <h1>Configure templates</h1>
   <div id="componentContainer">
     <input type="text" bind:value={newTemplateName} />
@@ -130,6 +145,7 @@
     </div>
   </div>
 
+  <!--CONFIGURE MENU-->
   <h1>Configure menu</h1>
   <div id="componentContainer">
     <div id="menu">
@@ -204,9 +220,68 @@
           </div>
         </div>
       {/each}
+      <button on:click="{addArticle}">Add article</button>
     </div>
   </div>
 
+  <!--CONFIGURE FOOTER-->
+  <h1>Configure Footer</h1>
+  <div id="componentContainer">
+    <div id="footerLinks">
+      <h2>Articles</h2>
+      {#each footer.links as link, i}
+        <div id="footerLink">
+          <div
+            on:click={() => {
+              deleteLink(i);
+            }}
+          >
+            X
+          </div>
+          <div class="inputs">
+            <div class="data">
+              <label>Title</label>
+              <input type="text" bind:value={link.title} />
+            </div>
+            <div class="data">
+              <label>Link</label>
+              <input type="text" bind:value={link.link} />
+            </div>
+          </div>
+          <div id="positionIndex">
+            <div
+              on:click={() => {
+                moveComponent(
+                  i,
+                  "up",
+                  footer.links,
+                  (tab) => (footer.links = tab)
+                );
+              }}
+            >
+              up
+            </div>
+            <div
+              on:click={() => {
+                moveComponent(
+                  i,
+                  "down",
+                  footer.links,
+                  (tab) => (footer.links = tab)
+                );
+              }}
+            >
+              down
+            </div>
+          </div>
+        </div>
+      {/each}
+      <button on:click="{addLink}">Add link</button>
+    </div>
+  </div>
+
+
+  <!--CONFIGURE STYLES-->
   <h1>Configure styles</h1>
   <div id="componentContainer">
     <div id="fontContainer">
@@ -238,6 +313,7 @@
     </div>
   </div>
 
+  <!--CONFIGURE COMPONENTS-->
   <h1>Configure components</h1>
   <div id="componentContainer">
     {#each components as comp, i}
@@ -253,6 +329,7 @@
     {/each}
   </div>
 
+    <!--CONFIGURE COMPONENTS POSITION-->
   <h1>Configure position and visibility of elements</h1>
   <div id="componentContainer">
     {#each components as comp, i}
@@ -281,6 +358,8 @@
     {/each}
     <button on:click={addComponent}>Add</button>
   </div>
+
+  <!--CONFIGURE COMPONENTS NEWS-->
   {#each components.map((comp, i) => {
     if (comp.news) {
       return { news: comp.news, compName: comp.name, compIndex: i };
@@ -358,6 +437,7 @@
         components;
       configuration.templates[configuration.selectedTemplate].styles = styles;
       configuration.templates[configuration.selectedTemplate].menu = menu;
+      configuration.templates[configuration.selectedTemplate].footer = footer;
 
       localStorage.setItem("configuration", JSON.stringify(configuration));
       push("/");
@@ -367,6 +447,7 @@
 
 <style>
   #configContainer {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -463,6 +544,12 @@
   }
 
   #article {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  #footerLink {
     display: flex;
     justify-content: space-evenly;
     align-items: center;

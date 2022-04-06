@@ -19,8 +19,3 @@
   />
 </div>
 
-<style>
-  .container {
-    margin: 10px;
-  }
-</style>

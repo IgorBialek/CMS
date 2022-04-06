@@ -13,18 +13,25 @@
     if (!error) {
       let user = { email, password, permission: "admin" };
 
-      //fetch server
-      //   const response = await fetch("?", {
-      //         method: 'POST',
-      //             'Content-Type': 'application/json',
-      //         },
-      //         body: JSON.stringify(user),
-      //     });
+      console.log("Dane posyłane do serwera: ")
+      console.log(JSON.stringify(user))
 
-      //   if (response.errorMessage) {
-      //     errorMessage = response.errorMessage;
-      //     return
-      //   }
+      //fetch server
+        const response = await fetch("/register", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+              },      
+              body: JSON.stringify(user)
+          });
+
+        console.log(response)
+
+        if (response.errorMessage) {
+          errorMessage = response.errorMessage;
+          return
+        }
 
       localStorage.setItem("user", JSON.stringify(user));
 
