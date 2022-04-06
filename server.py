@@ -26,6 +26,7 @@ Add user to db
 Return user data
 """
 
+#dfddddddddddddd
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
