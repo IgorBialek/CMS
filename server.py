@@ -1,5 +1,7 @@
 from flask import Flask, send_from_directory, request, jsonify
 import random
+import pymongo
+
 
 app = Flask(__name__)
 
@@ -37,6 +39,25 @@ Return user data
 
 @app.route("/register", methods=["POST"])
 def register():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["cms"]
+    mycol = mydb["users"]
+
+    mydict = { "name": "John", "address": "Highway 37" }
+    x = mycol.insert_one(mydict)
+    print(x.inserted_id)
+
+
+
+    print(myclient.list_database_names())
+
+    collist = mydb.list_collection_names()
+
+
+    if "users" in collist:
+        print("The collection exists.")
+    else: 
+        print("nie ma")
 
     data = request.get_json()
     email_server = data['email']
