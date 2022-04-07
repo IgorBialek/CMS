@@ -62,3 +62,53 @@ button:not(:disabled):active {
 button:focus {
   border-color: #666;
 }
+
+
+.configContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.componentContainer {
+  width: 50%;
+  border: 1px solid black;
+  padding: 50px;
+  border-radius: 10px;
+}
+
+.component {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 100px;
+}
+
+.positionIndex {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 5px;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: 0;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin: 5px;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
