@@ -57,9 +57,12 @@ user = { email, password };
 Return If ok user data else (string) errorMessage
 """
 
+#dziala czy nie
 #TESTESTTEST
 #asssssssfasfdssdaf
-#kolejny test
+#kolejny testdd
+#zzz
+#dffffff
 
 if __name__ == "__main__":
     app.run(debug=True)
