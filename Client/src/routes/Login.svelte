@@ -13,19 +13,25 @@
       let user = { email, password };
 
       //fetch server
-      //   const response = await fetch("?", {
-      //         method: 'POST',
-      //             'Content-Type': 'application/json',
-      //         },
-      //         body: JSON.stringify(user),
-      //     });
-      //   if (response.errorMessage) {
-      //     errorMessage = response.errorMessage;
-      //      return
-      //   }
+      const res = await fetch("/login", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        });
+
+      const response = await res.json();
+
+      console.log(response);
+
+      if (response.errorMessage) {
+        errorMessage = response.errorMessage;
+          return
+      }
 
       //Set user from response
-      //localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
 
       replace("/");
     } else {
