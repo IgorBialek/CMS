@@ -1,12 +1,12 @@
 <script>
-    import saveHandler from "../../utils/saveHandler"
-    import moveComponent from "../../utils/moveComponent"
-import App from "../../App.svelte";
+  import saveHandler from "../../utils/saveHandler";
+  import moveComponent from "../../utils/moveComponent";
+  import App from "../../App.svelte";
 
-    let configuration = JSON.parse(localStorage.getItem("configuration"));
-    let menu = configuration.templates[configuration.selectedTemplate].menu;
+  let configuration = JSON.parse(localStorage.getItem("configuration"));
+  let menu = configuration.templates[configuration.selectedTemplate].menu;
 
-    const deleteArticle = (index) => {
+  const deleteArticle = (index) => {
     menu.articles = menu.articles.filter((article, i) => i != index);
   };
 
@@ -16,35 +16,35 @@ import App from "../../App.svelte";
 </script>
 
 <div class="configContainer">
-   <!--CONFIGURE MENU-->
+  <!--CONFIGURE MENU-->
   <h1>Configure menu</h1>
   <div class="componentContainer">
     <div class="menu">
-     <div>
+      <div>
         <label>Horizontal</label>
         <input
           type="radio"
           name="menu"
-          checked
+          checked={menu.type == "horizontal"}
           on:change={() => {
             menu.type = "horizontal";
           }}
         />
-     </div>
-     <div>
+      </div>
+      <div>
         <label>Vertical</label>
         <input
           type="radio"
           name="menu"
+          checked={menu.type == "vertical"}
           on:change={() => {
             menu.type = "vertical";
           }}
         />
-     </div>
+      </div>
     </div>
     <h2>Articles</h2>
     <div class="articles">
-
       {#each menu.articles as article, i}
         <div class="article">
           <div
@@ -96,13 +96,15 @@ import App from "../../App.svelte";
           </div>
         </div>
       {/each}
-
     </div>
     <button on:click={addArticle}>Add article</button>
   </div>
-    <button on:click="{() => {
-        configuration.templates[configuration.selectedTemplate].menu = menu
-        saveHandler(configuration)}}">SAVE</button>
+  <button
+    on:click={() => {
+      configuration.templates[configuration.selectedTemplate].menu = menu;
+      saveHandler(configuration);
+    }}>SAVE</button
+  >
 </div>
 
 <style>
@@ -119,32 +121,32 @@ import App from "../../App.svelte";
   }
 
   .menu > div {
-      display: flex;
-      justify-content: center;
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
 
   .articles {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
   .article {
-      flex-grow: 1;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
   }
 
   .inputs {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .inputs > div {
-      margin: 5px;
+    margin: 5px;
   }
 </style>

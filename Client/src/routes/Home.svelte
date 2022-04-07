@@ -108,7 +108,6 @@ font-family: 'Oswald', sans-serif;
 
   nav {
     width: 100%;
-    height: 75px;
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -240,6 +239,7 @@ font-family: 'Oswald', sans-serif;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 15px;
   }
 
   .footer {
