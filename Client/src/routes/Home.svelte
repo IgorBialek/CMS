@@ -10,6 +10,42 @@
   let menu = configuration.templates[configuration.selectedTemplate].menu;
   let footer = configuration.templates[configuration.selectedTemplate].footer;
 
+  let sliderSelectors = configuration.templates[
+    configuration.selectedTemplate
+  ].components
+    .map((comp, i) => {
+      return {
+        compIndex: i,
+        selectedImage: 0,
+        slider: comp.slider,
+      };
+    })
+    .filter((comp) => comp.slider);
+
+  const sliderSelectorChange = (direction, compIndex) => {
+    let slider = sliderSelectors.filter((sel) => sel.compIndex == compIndex)[0];
+
+    if (direction == "down") {
+      if (slider.selectedImage > 0) {
+        sliderSelectors = sliderSelectors.map((sel) => {
+          if (sel.compIndex == compIndex) {
+            return { ...sel, selectedImage: sel.selectedImage - 1 };
+          } else return sel;
+        });
+      }
+    } else if (direction == "up") {
+      if (slider.selectedImage < slider.slider.images.length - 1) {
+        sliderSelectors = sliderSelectors.map((sel) => {
+          if (sel.compIndex == compIndex) {
+            return { ...sel, selectedImage: sel.selectedImage + 1 };
+          } else return sel;
+        });
+      }
+    }
+
+    console.log(sliderSelectors);
+  };
+
   //May refresh permissions
 
   const logout = () => {
@@ -48,10 +84,40 @@
   </nav>
 
   <div class="componentsContainer">
-    {#each components as comp}
+    {#each components as comp, i}
       {#if comp.visible}
-        <div>
+        <div class="sectionContainer">
           <h1>{comp.name}</h1>
+          {#if comp.slider}
+            <div class="sliderContainer">
+              <div class="sliderDescription">
+                <p>{comp.slider.description}</p>
+              </div>
+              <div
+                class="sliderDown"
+                on:click={() => {
+                  sliderSelectorChange("down", i);
+                }}
+              >
+                <p>{"<"}</p>
+              </div>
+              <div
+                class="sliderUp"
+                on:click={() => {
+                  sliderSelectorChange("up", i);
+                }}
+              >
+                <p>{">"}</p>
+              </div>
+              <img
+                alt="slider"
+                src={comp.slider.images[
+                  sliderSelectors.filter((slider) => slider.compIndex == i)[0]
+                    .selectedImage
+                ]}
+              />
+            </div>
+          {/if}
           {#if comp.news.length > 0}
             <div class="newsContainer">
               {#each comp.news as news}
@@ -99,6 +165,59 @@
  font-family: 'Quicksand', sans-serif;
 font-family: 'Oswald', sans-serif;
  */
+
+  .sectionContainer {
+    width: 100%;
+    margin-bottom: 50px;
+  }
+
+  .sliderContainer {
+    width: calc(100% - 100px);
+    height: 25vw;
+    background-color: blue;
+    position: relative;
+  }
+
+  .sliderContainer > img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sliderDown,
+  .sliderUp,
+  .sliderDescription {
+    position: absolute;
+    color: white;
+    width: 10%;
+    height: 10%;
+    top: calc(50% - 2.5vw);
+  }
+
+  .sliderDown > p,
+  .sliderUp > p,
+  .sliderDescription > p {
+    padding: 0;
+    margin: 0;
+    font-size: 5vw;
+    transition: 0.2s;
+  }
+
+  .sliderDown > p:hover,
+  .sliderUp > p:hover {
+    transition: 0.2s;
+    cursor: pointer;
+    text-shadow: black 0 0 5px;
+  }
+
+  .sliderUp {
+    right: 0;
+  }
+
+  .sliderDescription {
+    width: 80%;
+    left: 10%;
+    text-shadow: black 0 0 5px;
+  }
 
   .homeContainer {
     margin: 0 !important;
