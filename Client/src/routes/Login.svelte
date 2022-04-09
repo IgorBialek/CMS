@@ -31,7 +31,7 @@
       }
 
       //Set user from response
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(response));
 
       replace("/");
     } else {

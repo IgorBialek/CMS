@@ -46,7 +46,7 @@ def register():
     db = myclient["cms"]
     db_collection_users = db["users"]
 
-    userObject = { "_id": data["email"], "password": data["password"], "privileges": data["permission"] }
+    userObject = { "_id": data["email"], "password": data["password"], "permission": data["permission"] }
 
 
     try:
@@ -60,7 +60,7 @@ def register():
     except Exception as exception:
         #assert type(exception).__name__ == 'NameError'
         return jsonify({
-            'message': "This email is actually used"
+            'errorMessage': "This email is actually used"
         })
 
 
@@ -72,21 +72,22 @@ def login():
     db = myclient["cms"]
     db_collection_users = db["users"]
 
-    x = db_collection_users.find({},{ "_id": data["email"], "password": data["password"]})
+    x = db_collection_users.find_one({ "_id": data["email"], "password": data["password"]})
 
+    print(x)
 
-    try:
-        print(x[0])
-
+    if x != None:
         return jsonify({
-            'email': data["email"],
-            'password': data["password"],
-            'permission': x[0]["permission"]
+            'email': x["_id"],
+            'password': x["password"],
+            'permission': x["permission"]
         })
-    except Exception as exception:
+    else:
         return jsonify({
-            'message': "Wrong password or email"
+            'errorMessage': "Wrong password or email"
         })
+
+
 
 
 """
