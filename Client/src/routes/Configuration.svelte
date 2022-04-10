@@ -54,6 +54,16 @@
       {/if}
     {/each}
   </div>
+  <h2>Contents</h2>
+  <div class="blockContainer">
+    {#each components as comp, i}
+      {#if comp.content}
+        <div>
+          <a href={`/#/Configuration/Content/${i}`}>{comp.name}'s content</a>
+        </div>
+      {/if}
+    {/each}
+  </div>
 </div>
 
 <style>

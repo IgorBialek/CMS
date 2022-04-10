@@ -14,6 +14,7 @@
 
   const imageHandler = ({ target: { files } }) => {
     document.getElementById("uploadedImages").innerHTML = "";
+    sliderComponent.slider.images = [];
 
     for (let i = 0; i < files.length; i++) {
       var reader = new FileReader();

@@ -1,5 +1,6 @@
 <script>
   import { link, replace } from "svelte-spa-router";
+  import { onMount, onDestroy } from "svelte";
 
   let user = JSON.parse(localStorage.getItem("user"));
 
@@ -22,6 +23,35 @@
     })
     .filter((comp) => comp.slider);
 
+  let intervals = [];
+
+  const onInterval = (callback, milliseconds) => {
+    const interval = setInterval(callback, milliseconds);
+
+    intervals.push(interval);
+  };
+
+  onMount(() => {
+    sliderSelectors.forEach((selector, i) => {
+      if (selector.slider.images.length > 1) {
+        onInterval(() => {
+          console.log("III");
+          if (selector.selectedImage == selector.slider.images.length - 1) {
+            selector.selectedImage = 0;
+          } else {
+            selector.selectedImage += 1;
+          }
+
+          sliderSelectors[i] = selector;
+        }, selector.slider.switchTime * 1000);
+      }
+    });
+  });
+
+  onDestroy(() => {
+    intervals.forEach((interval) => clearInterval(interval));
+  });
+
   const sliderSelectorChange = (direction, compIndex) => {
     let slider = sliderSelectors.filter((sel) => sel.compIndex == compIndex)[0];
 
@@ -32,12 +62,24 @@
             return { ...sel, selectedImage: sel.selectedImage - 1 };
           } else return sel;
         });
+      } else {
+        sliderSelectors = sliderSelectors.map((sel) => {
+          if (sel.compIndex == compIndex) {
+            return { ...sel, selectedImage: slider.slider.images.length - 1 };
+          } else return sel;
+        });
       }
     } else if (direction == "up") {
       if (slider.selectedImage < slider.slider.images.length - 1) {
         sliderSelectors = sliderSelectors.map((sel) => {
           if (sel.compIndex == compIndex) {
             return { ...sel, selectedImage: sel.selectedImage + 1 };
+          } else return sel;
+        });
+      } else {
+        sliderSelectors = sliderSelectors.map((sel) => {
+          if (sel.compIndex == compIndex) {
+            return { ...sel, selectedImage: 0 };
           } else return sel;
         });
       }
@@ -63,6 +105,7 @@
 >
   <nav>
     <div class="navItems">
+      <a href="/#/Gallery">Gallery</a>
       {#each menu.articles as article}
         <a href={`/#/article/${article.link}`}>{article.title}</a>
       {/each}
@@ -132,6 +175,15 @@
               {/each}
             </div>
           {/if}
+          {#if comp.content}
+            <div class="contentContainer">
+              <div class="contentText">
+                <h2>{comp.content.title}</h2>
+                <p>{comp.content.text}</p>
+              </div>
+              <img alt="Nothing here" src={comp.content.image} />
+            </div>
+          {/if}
         </div>
       {/if}
     {/each}
@@ -169,6 +221,27 @@ font-family: 'Oswald', sans-serif;
   .sectionContainer {
     width: 100%;
     margin-bottom: 50px;
+  }
+
+  .contentContainer {
+    width: 75%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .contentContainer img {
+    max-width: 30vw;
+  }
+
+  .contentText {
+    margin: 0 5% 0 0;
+    text-align: left;
+    width: 66%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   .sliderContainer {

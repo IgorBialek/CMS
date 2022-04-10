@@ -37,6 +37,7 @@ if (!localStorage.getItem("configuration")) {
               visible: true,
               news: [],
               slider: null,
+              content: null,
             },
             {
               name: "News",
@@ -56,8 +57,19 @@ if (!localStorage.getItem("configuration")) {
                 },
               ],
               slider: null,
+              content: null,
             },
-            { name: "Content", visible: true, news: [], slider: null },
+            {
+              name: "Content",
+              visible: true,
+              news: [],
+              slider: null,
+              content: {
+                image: null,
+                title: "Title no.1",
+                text: "Kocham auta <3",
+              },
+            },
           ],
         },
         {
@@ -90,6 +102,7 @@ if (!localStorage.getItem("configuration")) {
               visible: true,
               news: [],
               slider: null,
+              content: null,
             },
             {
               name: "News",
@@ -103,8 +116,15 @@ if (!localStorage.getItem("configuration")) {
                 },
               ],
               slider: null,
+              content: null,
             },
-            { name: "Content", visible: true, news: [], slider: null },
+            {
+              name: "Content",
+              visible: true,
+              news: [],
+              slider: null,
+              content: null,
+            },
           ],
         },
       ],

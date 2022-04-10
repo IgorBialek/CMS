@@ -68,6 +68,32 @@
     });
   };
 
+  const addComponentContent = (index) => {
+    components = components.map((comp, i) => {
+      if (i == index) {
+        return {
+          ...comp,
+          content: { image: null, title: "", text: "" },
+        };
+      } else {
+        return comp;
+      }
+    });
+  };
+
+  const removeComponentContent = (index) => {
+    components = components.map((comp, i) => {
+      if (i == index) {
+        return {
+          ...comp,
+          content: null,
+        };
+      } else {
+        return comp;
+      }
+    });
+  };
+
   const addComponent = () => {
     components = [
       ...components,
@@ -97,8 +123,13 @@
           {:else}
             <button on:click={() => removeComponentNews(i)}>Remove news</button>
           {/if}
-
-          <button>Add content</button>
+          {#if !comp.content}
+            <button on:click={() => addComponentContent(i)}>Add content</button>
+          {:else}
+            <button on:click={() => removeComponentContent(i)}
+              >Remove content</button
+            >
+          {/if}
         </div>
       </div>
     {/each}
