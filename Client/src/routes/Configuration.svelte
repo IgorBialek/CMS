@@ -24,9 +24,9 @@
     <div>
       <a href="/#/Configuration/Menu">Menu</a>
     </div>
-    <div>
+    <!-- <div>
       <a href="/#/Configuration/Footer">Footer</a>
-    </div>
+    </div> -->
     <div>
       <a href="/#/Configuration/Component">Components</a>
     </div>

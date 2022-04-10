@@ -9,7 +9,6 @@
   let components =
     configuration.templates[configuration.selectedTemplate].components;
   let menu = configuration.templates[configuration.selectedTemplate].menu;
-  let footer = configuration.templates[configuration.selectedTemplate].footer;
 
   let sliderSelectors = configuration.templates[
     configuration.selectedTemplate
@@ -129,7 +128,7 @@
   <div class="componentsContainer">
     {#each components as comp, i}
       {#if comp.visible}
-        <div class="sectionContainer">
+        <div id={comp.name} class="sectionContainer">
           <h1>{comp.name}</h1>
           {#if comp.slider}
             <div class="sliderContainer">
@@ -200,8 +199,8 @@
 
   <footer>
     <div class="footer">
-      {#each footer.links as link}
-        <a href={`/#/${link.link}`}>{link.title}</a>
+      {#each components as comp}
+        <a href={`#${comp.name}`}>{comp.name}</a>
       {/each}
     </div>
     <div>Michał Dubrowski & Igor Białek 3P</div>
@@ -401,12 +400,16 @@ font-family: 'Oswald', sans-serif;
     margin: 0;
   }
 
+  .newsContent a {
+    margin-top: auto;
+  }
+
   .newsContent {
     padding: 25px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     text-align: left;
     color: white;
     background-color: var(--lightColor);
