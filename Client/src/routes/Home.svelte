@@ -1,6 +1,7 @@
 <script>
   import { link, replace } from "svelte-spa-router";
   import { onMount, onDestroy } from "svelte";
+import Article from "./Article.svelte";
 
   let user = JSON.parse(localStorage.getItem("user"));
 
@@ -97,16 +98,18 @@
 
 <div
   class="homeContainer"
-  style="--fontSize: {styles.fontSize}px; --fontFamily: {styles.selectedFont}; --lightColor: {styles
+  style="--fontSize: {styles.fontSize}px  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
     .colors.lightColor}; --mediumColor: {styles.colors
     .mediumColor}; --darkColor: {styles.colors
-    .darkColor}; --navDirection: {menu.type == 'vertical' ? 'column' : 'none'}"
+    .darkColor}; --navDirection: {menu.type == 'vertical' ? 'column' : 'none'}; --containerDirection:{menu.type == 'vertical' ? 'none' : 'column'}; --navWidth:{menu.type == 'vertical' ? '10%' : 'calc(100% - 30px)'}; --navJustify:{menu.type == 'vertical' ? 'flex-start' : 'space-between'}"
 >
   <nav>
     <div class="navItems">
       <a href="/#/Gallery">Gallery</a>
       {#each menu.articles as article}
+        {#if article.visible}
         <a href={`/#/article/${article.link}`}>{article.title}</a>
+        {/if}
       {/each}
     </div>
     <div class="userActions">
@@ -114,22 +117,25 @@
         <a href="/#/Login" class="login">Login</a>
         <a href="/#/Register" class="register">Register</a>
       {/if}
-
+  
       {#if user && user.permission == "admin"}
         <a href="/#/Configuration" class="config">Configuration</a>
+        <a href="/#/Users" class="users">Users</a>
       {/if}
-
+  
       {#if user}
         <a href="/" class="logout" on:click={logout}>Logout</a>
       {/if}
     </div>
   </nav>
 
+
+
   <div class="componentsContainer">
     {#each components as comp, i}
       {#if comp.visible}
         <div id={comp.name} class="sectionContainer">
-          <h1>{comp.name}</h1>
+          <!-- <h1>{comp.name}</h1> -->
           {#if comp.slider}
             <div class="sliderContainer">
               <div class="sliderDescription">
@@ -186,6 +192,14 @@
         </div>
       {/if}
     {/each}
+    <footer>
+      <div class="footer">
+        {#each components as comp}
+          <a href={`#${comp.name}`}>{comp.name}</a>
+        {/each}
+      </div>
+      <div>Michał Dubrowski & Igor Białek 3P</div>
+    </footer>
   </div>
 
   <!-- <div id="slider">
@@ -197,14 +211,7 @@
 
     <main></main> -->
 
-  <footer>
-    <div class="footer">
-      {#each components as comp}
-        <a href={`#${comp.name}`}>{comp.name}</a>
-      {/each}
-    </div>
-    <div>Michał Dubrowski & Igor Białek 3P</div>
-  </footer>
+
 </div>
 
 <style>
@@ -253,6 +260,7 @@ font-family: 'Oswald', sans-serif;
   .sliderContainer > img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 
   .sliderDown,
@@ -292,21 +300,28 @@ font-family: 'Oswald', sans-serif;
   }
 
   .homeContainer {
+    flex-direction: var(--containerDirection) !important;
+    display: flex;
     margin: 0 !important;
-    font-size: var(--fontSize);
-    font-family: var(--fontFamily), sans-serif;
+    font-size: var(--fontSize)  !important;
+    font-family: var(--fontFamily), sans-serif  !important;
   }
 
   nav {
-    width: 100%;
+    padding: 15px;
+    background-color: rgb(68, 68, 68);
+    width: var(--navWidth);
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: var(--navJustify);
     align-items: center;
+    flex-direction: var(--navDirection);
   }
 
   .userActions {
-    margin: 25px;
+    display: flex;
+    align-items: center;
+    flex-direction: var(--navDirection);
     display: flex;
   }
 
@@ -315,51 +330,61 @@ font-family: 'Oswald', sans-serif;
   }
 
   .navItems {
-    margin: 25px;
-    height: 100%;
     display: flex;
     flex-direction: var(--navDirection);
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .navItems > a {
     margin: 10px;
+    color: white;
   }
 
   .login,
   .register,
   .logout,
-  .config {
+  .config,
+  .users {
     padding: 10px;
   }
 
   .login:hover,
   .register:hover,
   .logout:hover,
-  .config:hover {
+  .config:hover
+  ,
+  .users:hover {
     text-decoration: none;
   }
 
   .login,
   .logout {
-    border: 1px solid green;
+    border: 2px solid green;
     border-radius: 10px;
     color: green;
   }
 
   .register {
-    border: 1px solid blue;
+    border: 2px solid blue;
     border-radius: 10px;
     color: blue;
   }
 
   .config {
-    border: 1px solid orangered;
+    border: 2px solid orangered;
     border-radius: 10px;
     color: orangered;
   }
+
+  .users {
+    border: 2px solid yellow;
+    border-radius: 10px;
+    color: yellow;
+  }
   .componentsContainer {
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -386,7 +411,7 @@ font-family: 'Oswald', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    width: 25%;
+    max-width: 500px;
   }
 
   .newsTitle {
@@ -429,6 +454,7 @@ font-family: 'Oswald', sans-serif;
   }
 
   footer {
+    width: 100%;
     border-top: 1px solid black;
     display: flex;
     justify-content: center;

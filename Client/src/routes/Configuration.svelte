@@ -7,11 +7,7 @@
 </script>
 
 <div class="configContainer">
-  <button
-    on:click={() => {
-      push("/");
-    }}>Back to website</button
-  >
+
   <h1>Configure anything you want</h1>
   <h2>Site</h2>
   <div class="blockContainer">
@@ -24,9 +20,9 @@
     <div>
       <a href="/#/Configuration/Menu">Menu</a>
     </div>
-    <!-- <div>
-      <a href="/#/Configuration/Footer">Footer</a>
-    </div> -->
+    <div>
+      <a href="/#/Configuration/Articles">Articles</a>
+    </div>
     <div>
       <a href="/#/Configuration/Component">Components</a>
     </div>
@@ -64,9 +60,17 @@
       {/if}
     {/each}
   </div>
+  <button
+  on:click={() => {
+    push("/");
+  }}>Back to website</button>
 </div>
 
 <style>
+  .configContainer h2 {
+    margin: 0;
+  }
+
   .blockContainer {
     width: 75%;
     display: flex;
@@ -81,8 +85,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 8vw;
-    height: 8vw;
+    width: 6vw;
+    height: 6vw;
     border: 1px solid black;
     border-radius: 10px;
   }

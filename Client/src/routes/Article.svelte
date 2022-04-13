@@ -16,9 +16,15 @@
 
 <style>
   .articleContainer {
+    font-size: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+  }
+
+  .articleContainer p {
+    width: 50%;
   }
 </style>

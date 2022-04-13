@@ -15,6 +15,8 @@
   import Slider from "./routes/Configure/Slider.svelte";
   import Gallery from "./routes/Gallery.svelte";
   import Content from "./routes/Configure/Content.svelte";
+import Articles from "./routes/Configure/Articles.svelte";
+import Users from "./routes/Users.svelte";
 </script>
 
 <div class="container">
@@ -27,6 +29,7 @@
       "/Configuration": Configuration,
       "/Configuration/Templates": Template,
       "/Configuration/Menu": Menu,
+      "/Configuration/Articles": Articles,
       "/Configuration/Footer": Footer,
       "/Configuration/Style": Style,
       "/Configuration/Component": Component,
@@ -35,6 +38,7 @@
       "/Configuration/Slider/*": Slider,
       "/Configuration/Content/*": Content,
       "/Article/*": Article,
+      "/Users": Users
     }}
   />
 </div>

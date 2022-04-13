@@ -97,6 +97,18 @@ user = { email, password };
 Return If ok user data else (string) errorMessage
 """
 
+"""
+TODO Send users
+"""
+
+"""
+TODO Save configuration json
+"""
+
+"""
+TODO Send configuration json
+"""
+
 #dziala czy nie
 #TESTESTTEST
 #asssssssfasfdssdaf

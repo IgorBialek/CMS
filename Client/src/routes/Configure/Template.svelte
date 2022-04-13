@@ -49,7 +49,7 @@
     <input type="text" bind:value={newTemplateName} />
     <button on:click={addTemplate}>Add template</button>
     <div class="template">
-      <p>Select template</p>
+      <h2>Select template</h2>
       <select
         on:input={templateChangeHandler}
         bind:value={configuration.selectedTemplate}

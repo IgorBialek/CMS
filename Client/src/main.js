@@ -11,8 +11,8 @@ if (!localStorage.getItem("configuration")) {
           menu: {
             type: "horizontal",
             articles: [
-              { title: "TEST1", text: "55555555", link: "test" },
-              { title: "TEST2", text: "666666666", link: "test2" },
+              { title: "TEST1", text: "55555555", link: "test", visible: true },
+              { title: "TEST2", text: "666666666", link: "test2", visible: true },
             ],
           },
 
@@ -71,8 +71,8 @@ if (!localStorage.getItem("configuration")) {
           menu: {
             type: "vertical",
             articles: [
-              { title: "TEST3", text: "77777777", link: "test3" },
-              { title: "TEST4", text: "888888888", link: "test4" },
+              { title: "TEST3", text: "77777777", link: "test3", visible: true },
+              { title: "TEST4", text: "888888888", link: "test4", visible: true },
             ],
           },
           styles: {
