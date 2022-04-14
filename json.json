@@ -1,0 +1,50 @@
+{
+  "selectedTemplate": 0,
+  "templates": [
+    {
+      "name": "",
+      "menu": {
+        "type": "",
+        "articles": [
+          {
+            "title": "",
+            "text": "",
+            "link": ""
+          }
+        ]
+      },
+      "footer": {
+        "links": [
+          {
+            "title": "",
+            "link": ""
+          }
+        ]
+      },
+      "styles": {
+        "fontSize": 16,
+        "selectedFont": "",
+        "colors": {
+          "lightColor": "",
+          "mediumColor": "",
+          "darkColor": ""
+        }
+      },
+      "components": [
+        {
+          "name": "",
+          "visible": false,
+          "news": [
+            {
+              "title": "",
+              "headline": "",
+              "text": "",
+              "link": ""
+            }
+          ],
+          "slider": null
+        }
+      ]
+    }
+  ]
+}
