@@ -16,6 +16,15 @@ Figure out how to use GridFS to save images and what format of files you will ne
 # Path for our main Svelte page
 @app.route("/")
 def base():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = myclient["cms"]
+    db_collection_users = db["users"]
+    
+    try:
+        db_collection_users.insert_one({ "_id": "admin", "password": "admin", "permission": "admin"})
+    except Exception as exception:
+        print("Admin already exists")
+
     return send_from_directory('Client/public', 'index.html')
 
 # Path for all the static files (compiled JS/CSS, etc.)
