@@ -110,7 +110,7 @@ def saveConfiguration():
     db_collection_pageConfiguration = db["pageConfiguration"]
 
     try:
-        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"configuration": data})
+        db_collection_pageConfiguration.replace_one({"_id": "pageConfigurationSettings"}, {"configuration": data})
     except Exception as exception:
         print("Page configuration is already set")
 
