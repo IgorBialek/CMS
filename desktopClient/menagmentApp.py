@@ -46,19 +46,29 @@ def load_data_to_sheet():
 
 
 def insert_user(email, password, permission):
+    global typeOfSaving
     global db_collection_users
+    global editedUserId
+
+    if typeOfSaving == "edit":
+        db_collection_users.delete_one({ "_id": editedUserId})
+
     db_collection_users.insert_one({ "_id": email, "password": password, "permission": permission })
+
     load_data_to_sheet()
 
 
 def delete_user():
     global sheet
     global db_collection_users
-    sheetData = next(iter(sheet.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
-    db_collection_users.delete_one({"_id": sheet.get_row_data(sheetData, return_copy = True)[0], "password": sheet.get_row_data(sheetData, return_copy = True)[1], "permission": sheet.get_row_data(sheetData, return_copy = True)[2]})
-    sheet.deselect(row = sheetData, column = None, cell = None, redraw = True)
-    load_data_to_sheet()
 
+    try:
+        sheetData = next(iter(sheet.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
+        db_collection_users.delete_one({"_id": sheet.get_row_data(sheetData, return_copy = True)[0], "password": sheet.get_row_data(sheetData, return_copy = True)[1], "permission": sheet.get_row_data(sheetData, return_copy = True)[2]})
+        sheet.deselect(row = sheetData, column = None, cell = None, redraw = True)
+        load_data_to_sheet()
+    except Exception as exception:
+        tk.messagebox.showinfo("showinfo", "User is not selected, you have to click on the number of row")
 
 def show_users_or_edit_content(page_name, type):
     global Users
@@ -70,7 +80,12 @@ def show_users_or_edit_content(page_name, type):
     global permissionCombobox
     global sheet
     global users
+    global typeOfSaving
+    global editedUserId
     '''Show a frame for the given page name'''
+
+    emailIsValid = True
+    passwordIsValid = True
 
 
 
@@ -86,18 +101,29 @@ def show_users_or_edit_content(page_name, type):
             passwordEntry.insert(0, sheet.get_row_data(sheetData, return_copy = True)[1])
             passwordRepeatEntry.insert(0, sheet.get_row_data(sheetData, return_copy = True)[1])
             permissionCombobox.set( sheet.get_row_data(sheetData, return_copy = True)[2])
+            typeOfSaving = "edit"
+            editedUserId = sheet.get_row_data(sheetData, return_copy = True)[0]
         except Exception as exception:
             print("User is not selected")
+            tk.messagebox.showinfo("showinfo", "User is not selected, you have to click on the number of row")
             return
+    elif type == "add":
+            typeOfSaving = "add"
+            permissionCombobox.set("user")
     elif type == "save":
-        insert_user(emailEntry.get(), passwordEntry.get(), permissionCombobox.get())
+        emailIsValid = emailEntry.validate()
+        passwordIsValid = passwordRepeatEntry.validate()
+
+        if emailIsValid and passwordIsValid:
+            insert_user(emailEntry.get(), passwordEntry.get(), permissionCombobox.get())
 
 
-    for frame in frames.keys():
-        if frame == page_name:
-            frames[frame].pack()
-        else:
-            frames[frame].pack_forget()
+    if emailIsValid and passwordIsValid:
+        for frame in frames.keys():
+            if frame == page_name:
+                frames[frame].pack()
+            else:
+                frames[frame].pack_forget()
 
 
 def check_email():
@@ -105,10 +131,22 @@ def check_email():
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     
     if re.search(regex, emailEntry.get()):
-        #self.wdgLst.configure(text='Email is valid')
+        infoLabel.config(text="")
         return True
     else:
-        #self.wdgLst.configure(text='Email is Invalid')
+        infoLabel.config(text="Email is not valid")
+        return False
+
+
+def check_passwords():
+    global passwordEntry
+    global passwordRepeatEntry
+
+    if len(passwordEntry.get()) > 0 and len(passwordRepeatEntry.get()) > 0 and passwordRepeatEntry.get() == passwordEntry.get():
+        infoLabel.config(text="")
+        return True
+    else:
+        infoLabel.config(text="Passwords must be equal and cannot be empty")
         return False
 
 
@@ -171,6 +209,13 @@ UsersButtonsFrameEdit.pack()
 cancelBtn = ttk.Button(UsersButtonsFrameEdit, text="Cancel", command= lambda: show_users_or_edit_content("UsersDefault", "cancel"))
 cancelBtn.pack(side="left", pady=10, padx=5)
 
+InfoUserEditFrame = ttk.Frame(UsersEdit, width=600)
+InfoUserEditFrame.pack(side="bottom")
+infoLabel = ttk.Label(InfoUserEditFrame, text="")
+infoLabel.pack()
+
+typeOfSaving = ""
+editedUserId = ""
 SaveButtonFrame = ttk.Frame(UsersEdit, width=600)
 SaveButtonFrame.pack(side="bottom")
 saveBtn = ttk.Button(SaveButtonFrame, text="Save", command= lambda: show_users_or_edit_content("UsersDefault", "save"))
@@ -182,7 +227,7 @@ PermissionFrame.pack(side="bottom")
 permissionLabel = ttk.Label(PermissionFrame, text="Permission", width=15)
 permissionLabel.pack(side="left")
 selected_role = tk.StringVar()
-permissionCombobox = ttk.Combobox(PermissionFrame, textvariable=selected_role, width=24)
+permissionCombobox = ttk.Combobox(PermissionFrame, textvariable=selected_role, width=24, state = "readonly")
 permissionCombobox['values'] = ["admin", "permitted", "user"]
 permissionCombobox.pack(side="right")
 
@@ -193,6 +238,7 @@ passwordRepeatLabel = ttk.Label(PasswordRepeatFrame, text="Password repeat", wid
 passwordRepeatLabel.pack(side="left")
 passwordRepeatEntry = ttk.Entry(PasswordRepeatFrame, width=25)
 passwordRepeatEntry.pack(side="right")
+passwordRepeatEntry.config(validate="focusout", validatecommand=check_passwords)
 #passwordRepeatEntry.insert(0, choosedUserPassword)
 
 PasswordFrame = ttk.Frame(UsersEdit, width=300)
@@ -207,7 +253,8 @@ UsersEmailFrame = ttk.Frame(UsersEdit, width=300)
 UsersEmailFrame.pack(side="bottom")
 emailLabel = ttk.Label(UsersEmailFrame, text="Email", width=15)
 emailLabel.pack(side="left")
-emailEntry = ttk.Entry(UsersEmailFrame, width=25, validatecommand=check_email)
+emailEntry = ttk.Entry(UsersEmailFrame, width=25 )
+emailEntry.config(validate="focusout", validatecommand=check_email)
 emailEntry.pack(side="right")
 
 
