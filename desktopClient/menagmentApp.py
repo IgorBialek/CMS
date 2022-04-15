@@ -1,9 +1,10 @@
 import enum
 from msilib.schema import Component
+from operator import index
 import tkinter as tk
 from tkinter import ttk
 import tkinter
-from turtle import right
+from turtle import right, title
 from ttkthemes import ThemedTk
 from tksheet import Sheet
 import pymongo
@@ -64,6 +65,10 @@ def on_tab_change(event):
         load_data_to_navbar_section()
     elif tab == "News":
         load_data_to_news_sheet()
+    elif tab == "Footer":
+        load_data_to_footer_section()
+    elif tab == "Slider":
+        load_data_to_slider_sheet()
 
 
 def load_data_to_sheet():
@@ -186,7 +191,7 @@ UsersEdit = ttk.Frame(Users, width=600, height=300)
 UsersEdit.pack(side="left")
 
 UsersDefault = ttk.Frame(Users, width=600, height=300)
-UsersDefault.pack(side="left")
+UsersDefault.pack(side="left", padx=5)
 
 frames = {"UsersDefault": UsersDefault, "UsersEdit": UsersEdit}
 
@@ -364,19 +369,24 @@ def save_articles():
 #########################################################################################################
 
 frameNews = {}
-
+selectedBlockNewsName = ""
+entriesNews = []
+selectedComponentIndex = None
 
 
 def show_news_or_edit_content_news(page_name, type):
     global sheetNews
     global selectedTemplate
     global dataPageConfigurationNewsComponents
+    global selectedBlockNewsName
+    global entriesNews
+    global selectedComponentIndex
 
     print("POWINNO SIE WYSTWIELIC")
     print(page_name)
     print(frameNews)
 
-
+    isSelected = True
 
     if type == "Edit":
         for widget in NewsEdit.winfo_children():
@@ -398,56 +408,72 @@ def show_news_or_edit_content_news(page_name, type):
 
         rowIndexNavbar = 0
 
-        selectedRow = next(iter(sheetNews.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
-        print(sheetNews.get_row_data(selectedRow, return_copy = True)[0])
+        try:
+            selectedRow = next(iter(sheetNews.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
+            print(sheetNews.get_row_data(selectedRow, return_copy = True)[0])
+            selectedBlockNewsName = sheetNews.get_row_data(selectedRow, return_copy = True)[0]
 
+            UsersButtonsFrameEditNews = ttk.Frame(NewsEdit, width=600)
+            UsersButtonsFrameEditNews.grid(column=1, columnspan=2, row=0, padx=5, pady=10)
+            cancelBtnNews = ttk.Button(UsersButtonsFrameEditNews, text="Cancel", command= lambda: show_news_or_edit_content_news("NewsDefault", "cancel"))
+            cancelBtnNews.pack()
+            #print(dataPageConfigurationNewsComponents[sheetNews.get_row_data(selectedRow, return_copy = True)[0]])
 
-        UsersButtonsFrameEditNews = ttk.Frame(NewsEdit, width=600)
-        UsersButtonsFrameEditNews.grid(column=1, columnspan=2, row=0, padx=5, pady=10)
-        cancelBtnNews = ttk.Button(UsersButtonsFrameEditNews, text="Cancel", command= lambda: show_news_or_edit_content_news("NewsDefault", "cancel"))
-        cancelBtnNews.pack()
-        #print(dataPageConfigurationNewsComponents[sheetNews.get_row_data(selectedRow, return_copy = True)[0]])
+            print()
+            entriesNews = []
 
-        print()
+            for i,component in enumerate(dataPageConfigurationNewsComponents):
+                if component["name"] == sheetNews.get_row_data(selectedRow, return_copy = True)[0]:
+                    selectedComponentIndex = i
+                    for j,news in enumerate(component['news']):
+                        print(news)
+                        newsEntryTitle = ttk.Entry(NewsEdit, width=15)
+                        newsEntryTitle.grid(column=0, row=j + 2, padx=2, pady=5)
+                        newsEntryTitle.insert(0, news["title"])
+                        newsEntryHeadline = ttk.Entry(NewsEdit, width=15)
+                        newsEntryHeadline.grid(column=1, row=j + 2, padx=2, pady=5)
+                        newsEntryHeadline.insert(0, news["headline"])
+                        newsEntryText = ttk.Entry(NewsEdit, width=15)
+                        newsEntryText.grid(column=2, row=j + 2, padx=2, pady=5)
+                        newsEntryText.insert(0, news["text"])
+                        newsEntryLink = ttk.Entry(NewsEdit, width=15)
+                        newsEntryLink.grid(column=3, row=j + 2, padx=2, pady=5)
+                        newsEntryLink.insert(0, news["link"])
+                        rowIndexNavbar = j + 2
+                        entriesNews.append([newsEntryTitle, newsEntryHeadline, newsEntryText, newsEntryLink])
 
-        for i,component in enumerate(dataPageConfigurationNewsComponents):
-            if component["name"] == sheetNews.get_row_data(selectedRow, return_copy = True)[0]:
-                for j,news in enumerate(component['news']):
-                    print(news)
-                    newsEntryTitle = ttk.Entry(NewsEdit, width=15)
-                    newsEntryTitle.grid(column=0, row=j + 2, padx=2, pady=5)
-                    newsEntryTitle.insert(0, news["title"])
-                    newsEntryHeadline = ttk.Entry(NewsEdit, width=15)
-                    newsEntryHeadline.grid(column=1, row=j + 2, padx=2, pady=5)
-                    newsEntryHeadline.insert(0, news["headline"])
-                    newsEntryText = ttk.Entry(NewsEdit, width=15)
-                    newsEntryText.grid(column=2, row=j + 2, padx=2, pady=5)
-                    newsEntryText.insert(0, news["text"])
-                    newsEntryLink = ttk.Entry(NewsEdit, width=15)
-                    newsEntryLink.grid(column=3, row=j + 2, padx=2, pady=5)
-                    newsEntryLink.insert(0, news["link"])
-                    rowIndexNavbar = j + 2
-                    #entriesArticles.append([articleEntryTitle, articleEntryText, articleEntryLink])
+            rowIndexNavbar += 1
 
-        rowIndexNavbar += 1
+            UsersButtonsFrameEditNewsSave = ttk.Frame(NewsEdit, width=600)
+            UsersButtonsFrameEditNewsSave.grid(column=1, columnspan=2, row=rowIndexNavbar, padx=5, pady=15)
+            saveBtnNews = ttk.Button(UsersButtonsFrameEditNewsSave, text="Save", command= lambda: show_news_or_edit_content_news("NewsDefault", "Save"))
+            saveBtnNews.pack()
+        except Exception as exception:
+            isSelected = False
+            tk.messagebox.showinfo("showinfo", "Block news is not selected, you have to click on the number of row")
+    elif type == "Save":
+        newNewsValues = []
+        for newsEntry in entriesNews:
+            newNewsValues.append({"title": newsEntry[0].get(), "headline": newsEntry[1].get(),"text": newsEntry[2].get(),"link": newsEntry[3].get()})
 
-        UsersButtonsFrameEditNewsSave = ttk.Frame(NewsEdit, width=600)
-        UsersButtonsFrameEditNewsSave.grid(column=1, columnspan=2, row=rowIndexNavbar, padx=5, pady=15)
-        saveBtnNews = ttk.Button(UsersButtonsFrameEditNewsSave, text="Save", command= lambda: show_news_or_edit_content_news("NewsDefault", "cancel"))
-        saveBtnNews.pack()
-
-
-    for frame in frameNews.keys():
-        if frame == page_name:
-            frameNews[frame].pack()
-        else:
-            frameNews[frame].pack_forget()
+        print(newNewsValues)
+        print(selectedComponentIndex)
+        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(selectedTemplate)}.components.{str(selectedComponentIndex)}.news": newNewsValues}})
+        load_data_to_news_sheet()
+   
+    if isSelected:
+        for frame in frameNews.keys():
+            if frame == page_name:
+                frameNews[frame].pack()
+            else:
+                frameNews[frame].pack_forget()
 
 
 def load_data_to_news_sheet():
     global sheetNews
     global selectedTemplate
     global dataPageConfigurationNewsComponents
+
     dataPageConfigurationNews = db_collection_pageConfiguration.find({}, {})
     selectedTemplate = dataPageConfigurationNews[0]["configuration"]["selectedTemplate"]
     dataPageConfigurationNewsComponents = dataPageConfigurationNews[0]["configuration"]["templates"][selectedTemplate]["components"]
@@ -486,10 +512,181 @@ sheetNews.enable_bindings(("row_select","single_select"))
 show_news_or_edit_content_news("NewsDefault", "")
 
 
+#########################################################################################################
+
+entriesComponentNames = []
+
+
+def save_components_name_changes():
+    global selectedTemplate
+    global pageConfiguration
+    global entriesComponentNames
+
+    for componentIndex in range(len(pageConfiguration["configuration"]["templates"][selectedTemplate]["components"])): 
+        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(selectedTemplate)}.components.{str(componentIndex)}.name": entriesComponentNames[componentIndex].get()}})
+
+def load_data_to_footer_section():
+    global selectedTemplate
+    global pageConfiguration
+    global entriesComponentNames
+    entriesComponentNames = []
+
+    for widget in Footer.winfo_children():
+        widget.destroy()
+
+    titleFooterLabel = ttk.Label(Footer, text="Component name")
+    titleFooterLabel.pack(padx=10, pady=10)
+
+
+    pageConfiguration = db_collection_pageConfiguration.find_one({"_id": "pageConfigurationSettings"})
+    selectedTemplate = pageConfiguration["configuration"]["selectedTemplate"]
+    for component in pageConfiguration["configuration"]["templates"][selectedTemplate]["components"]:
+        componentNameEnty = ttk.Entry(Footer)
+        componentNameEnty.pack(padx=5, pady=5)
+        componentNameEnty.insert(0, component["name"])
+        entriesComponentNames.append(componentNameEnty)
+
+    saveComponentNamesChangesBtn = ttk.Button(Footer, text="Save", command=save_components_name_changes)
+    saveComponentNamesChangesBtn.pack(padx=10, pady=10)
+
+
+#########################################################################################################
+
+frameSlider = {}
+selectedBlockSliderName = ""
+entriesSliderSettings = []
+selectedComponentIndexSlider = None
+
+
+def show_sliders_or_edit_content_slider(page_name, type):
+    global sheetSliders
+    global selectedTemplate
+    global dataPageConfigurationSlidersComponents
+    global selectedBlockSliderName
+    global entriesSliderSettings
+    global selectedComponentIndexSlider
+
+    # print("POWINNO SIE WYSTWIELIC")
+    # print(page_name)
+    # print(frameNews)
+
+    isSelected = True
+
+    if type == "Edit":
+        for widget in SliderEdit.winfo_children():
+            widget.destroy()
+
+        SliderEdit.columnconfigure(0, weight=1)
+        SliderEdit.columnconfigure(1, weight=1)
+        
+
+        sliderColumnHeaderDescriptionLabel = ttk.Label(SliderEdit, text="Description")
+        sliderColumnHeaderDescriptionLabel.grid(column=0, row=1, padx=5, pady=5)
+        sliderColumnHeaderDurationLabel = ttk.Label(SliderEdit, text="Duration(secs)")
+        sliderColumnHeaderDurationLabel.grid(column=1, row=1, padx=5, pady=5)
+       
+
+        rowIndexNavbar = 0
+
+        try:
+            selectedRow = next(iter(sheetSliders.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
+            print(sheetSliders.get_row_data(selectedRow, return_copy = True)[0])
+            selectedBlockSliderName = sheetSliders.get_row_data(selectedRow, return_copy = True)[0]
+
+            print("CHECKPOINT CHECKPOINT")
+
+            UsersButtonsFrameCancelSlider = ttk.Frame(SliderEdit, width=600)
+            UsersButtonsFrameCancelSlider.grid(column=0, columnspan=2, row=0, padx=5, pady=10)
+            cancelBtnSlider = ttk.Button(UsersButtonsFrameCancelSlider, text="Cancel", command= lambda: show_sliders_or_edit_content_slider("SliderDefault", "cancel"))
+            cancelBtnSlider.pack()
+            #print(dataPageConfigurationNewsComponents[sheetNews.get_row_data(selectedRow, return_copy = True)[0]])
+
+            entriesSliderSettings = []
+
+            for i,component in enumerate(dataPageConfigurationSlidersComponents):
+                if component["name"] == sheetSliders.get_row_data(selectedRow, return_copy = True)[0]:
+                    selectedComponentIndexSlider = i
+                    # for j,slider in enumerate(component['slider']):
+                    #     print(slider)
+                    print("TES")
+                    sliderEntryDescription = ttk.Entry(SliderEdit, width=15)
+                    sliderEntryDescription.grid(column=0, row=2, padx=2, pady=5)
+                    sliderEntryDescription.insert(0, component["slider"]["description"])
+                    sliderEntryDuration = ttk.Entry(SliderEdit, width=15)
+                    sliderEntryDuration.grid(column=1, row=2, padx=2, pady=5)
+                    sliderEntryDuration.insert(0, str(component["slider"]["switchTime"]))
+                    entriesSliderSettings.append([sliderEntryDescription, sliderEntryDuration])
+
+            rowIndexNavbar = 3
+            print("tu?")
+            UsersButtonsFrameEditSlidersSave = ttk.Frame(SliderEdit, width=600)
+            UsersButtonsFrameEditSlidersSave.grid(column=0, columnspan=2, row=rowIndexNavbar, padx=5, pady=15)
+            saveBtnSlider = ttk.Button(UsersButtonsFrameEditSlidersSave, text="Save", command= lambda: show_sliders_or_edit_content_slider("SliderDefault", "Save"))
+            saveBtnSlider.pack()
+        except Exception as exception:
+            isSelected = False
+            tk.messagebox.showinfo("showinfo", "Block slider is not selected, you have to click on the number of row")
+    elif type == "Save":
+        # newSliderValues = []
+
+
+        print(selectedComponentIndexSlider)
+        #TODO IMPROVE SAVING(NOW IMAGES ARE REMOVING)
+        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(selectedTemplate)}.components.{str(selectedComponentIndexSlider)}.slider.description": entriesSliderSettings[0][0].get()}})
+        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(selectedTemplate)}.components.{str(selectedComponentIndexSlider)}.slider.switchTime": entriesSliderSettings[0][1].get()}})
+        load_data_to_slider_sheet()
+   
+    if isSelected:
+        for frame in frameSlider.keys():
+            if frame == page_name:
+                frameSlider[frame].pack()
+            else:
+                frameSlider[frame].pack_forget()
+
+
+def load_data_to_slider_sheet():
+    global sheetSliders
+    global selectedTemplate
+    global dataPageConfigurationSlidersComponents
+
+    dataPageConfigurationSliders = db_collection_pageConfiguration.find({}, {})
+    selectedTemplate = dataPageConfigurationSliders[0]["configuration"]["selectedTemplate"]
+    dataPageConfigurationSlidersComponents = dataPageConfigurationSliders[0]["configuration"]["templates"][selectedTemplate]["components"]
+
+    slidersBlockNameArray = []
+
+    print(dataPageConfigurationSlidersComponents)
+
+    for component in dataPageConfigurationSlidersComponents:
+        print(component["name"])
+        if component["slider"] != None:
+            slidersBlockNameArray.append(component["name"])
+
+    sheetSliders.set_sheet_data([[sliderBlockName] for sliderBlockName in slidersBlockNameArray])
 
 
 
+SliderEdit = ttk.Frame(Slider, width=600, height=300)
+SliderEdit.pack(side="left")
+SliderDefault = ttk.Frame(Slider, width=600, height=300)
+SliderDefault.pack(side="left")
+frameSlider = {"SliderEdit": SliderEdit, "SliderDefault": SliderDefault}
 
-#ustawienie wyswietlania
+
+SliderEditButtonFrame = ttk.Frame(SliderDefault, width=300)
+SliderEditButtonFrame.pack(side="top")
+SliderEditButton = ttk.Button(SliderEditButtonFrame, text="Edit", command=lambda: show_sliders_or_edit_content_slider("SliderEdit", "Edit"))
+SliderEditButton.pack(side="left", pady=10, padx=5)
+
+
+sheetSliders = Sheet(SliderDefault, width=570, enable_edit_cell_auto_resize = False, column_width=390)
+sheetSliders.pack(side="bottom")
+
+sheetSliders.headers(newheaders = ["Block name"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
+#RAZ TRZEBA () A RAZ (()), NIE WIEM CZEMU
+sheetSliders.enable_bindings(("row_select","single_select"))
+# load_data_to_sheet()
+
+show_sliders_or_edit_content_slider("SliderDefault", "")
 
 window.mainloop()
