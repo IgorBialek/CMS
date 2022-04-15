@@ -3,6 +3,7 @@ from flask import Flask, send_from_directory, request, jsonify
 import random
 import pymongo
 import json
+from collections import namedtuple
 
 app = Flask(__name__)
 
@@ -13,6 +14,8 @@ def base():
     initPageConfiguration = open("Client/public/initPageConfiguration.json")
     data = json.load(initPageConfiguration)
 
+    print(type(data))
+    print(data)
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     db = myclient["cms"]
     db_collection_users = db["users"]    
@@ -101,33 +104,6 @@ Save configuration as one big JSON
 Figure out how to use GridFS to save images and what format of files you will need
 """
 
-@app.route("/saveConfiguration", methods=["POST"])
-def saveConfiguration():
-    data = request.get_json()
-
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    db = myclient["cms"]
-    db_collection_pageConfiguration = db["pageConfiguration"]
-
-    try:
-        db_collection_pageConfiguration.replace_one({"_id": "pageConfigurationSettings"}, {"configuration": data})
-    except Exception as exception:
-        print("Page configuration is already set")
-
-    try:
-        db_collection_pageConfiguration.insert_one(data)
-        return jsonify({
-            'message': "Configuration is saved!"
-        })
-    except Exception as exception:
-        #assert type(exception).__name__ == 'NameError'
-        return jsonify({
-            'errorMessage': "Cant save configuration"
-        })
-
-"""
-TODO Send users
-"""
 
 """
 TODO Save configuration json
@@ -137,12 +113,42 @@ TODO Save configuration json
 TODO Send configuration json
 """
 
-#dziala czy nie
-#TESTESTTEST
-#asssssssfasfdssdaf
-#kolejny testdd
-#zzz
-#dffffff
+@app.route("/saveConfiguration", methods=["POST"])
+def saveConfiguration():
+    data = request.get_json()
+    
+    print(type(data))
+    print(data)
+    #data = json.load(data)
+
+
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = myclient["cms"]
+    db_collection_pageConfiguration = db["pageConfiguration"]
+
+    try:
+        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, { "$set":  {"_id": "pageConfigurationSettings","configuration": data } }, upsert=False)
+        return jsonify({"configuration": data})
+    except Exception as exception:
+        print("Page configuration is already set")
+        return jsonify({"configuration": db_collection_pageConfiguration.find_one({"_id": "pageConfigurationSettings"})})
+
+
+"""
+TODO Send users
+"""
+
+@app.route("/getUsers", methods=["POST"] )
+def getUsers():
+
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = myclient["cms"]
+    db_collection_users = db["users"]
+
+    return jsonify({
+        "users": db_collection_users.find({}, {})
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True)
