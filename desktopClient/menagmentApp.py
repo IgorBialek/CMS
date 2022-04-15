@@ -1,3 +1,5 @@
+import enum
+from msilib.schema import Component
 import tkinter as tk
 from tkinter import ttk
 import tkinter
@@ -6,6 +8,11 @@ from ttkthemes import ThemedTk
 from tksheet import Sheet
 import pymongo
 import re
+import ctypes
+import os
+
+myappid = 'appIcon.ico' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 
 # from tkinter.ttk import Notebook
@@ -15,10 +22,15 @@ window.geometry("900x500")
 window.title("Menagment")
 window.configure(bg='#3dade9')
 
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+window.iconbitmap(os.path.join(__location__, 'appIcon.ico'))
+
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 db = myclient["cms"]
 db_collection_users = db["users"]
+db_collection_pageConfiguration = db["pageConfiguration"]
+
 
 try:
     db_collection_users.insert_one({ "_id": "admin", "password": "admin", "permission": "admin"})
@@ -40,9 +52,29 @@ Users = ttk.Frame(notebookSections, width=600, height=300)
 # choosedUserLogin = ""
 # choosedUserPassword = ""
 
+def on_tab_change(event):
+    global notebookSections
+    tab = event.widget.tab('current')['text']
+    print(tab)
+
+    if tab == "Users":
+        load_data_to_sheet()
+        pass
+    elif tab == "Navbar":
+        load_data_to_navbar_section()
+    elif tab == "News":
+        load_data_to_news_sheet()
+
+
 def load_data_to_sheet():
     global db_collection_users
-    sheet.set_sheet_data([[user["_id"], user["password"], user["permission"]] for user in db_collection_users.find({}, {})])
+    global sheet
+
+
+    try:
+        sheet.set_sheet_data([[user["_id"], user["password"], user["permission"]] for user in db_collection_users.find({}, {})])
+    except:
+        print("Page is laoding")
 
 
 def insert_user(email, password, permission):
@@ -175,6 +207,8 @@ notebookSections.add(News, text="News")
 notebookSections.add(Footer, text="Footer")
 notebookSections.add(Slider, text="Slider")
 
+notebookSections.bind('<<NotebookTabChanged>>', on_tab_change)
+
 
 
 #USER DEFAULT
@@ -197,9 +231,8 @@ sheet.pack()
 
 sheet.headers(newheaders = ["email", "password", "permission"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
 #RAZ TRZEBA () A RAZ (()), NIE WIEM CZEMU
-load_data_to_sheet()
 sheet.enable_bindings(("row_select","single_select"))
-
+load_data_to_sheet()
 
 
 
@@ -261,6 +294,202 @@ emailEntry.pack(side="right")
 
 #emailEntry.insert(0, choosedUserLogin)
 
+#########################################################################################################
+entriesArticles = []
 
+
+def load_data_to_navbar_section():
+
+    global rowIndexNavbar
+    global selectedTemplate
+    #global dataPageConfigurationNavbarArticles
+
+    for widget in Navbar.winfo_children():
+        widget.destroy()
+
+    Navbar.columnconfigure(0, weight=1)
+    Navbar.columnconfigure(1, weight=1)
+    Navbar.columnconfigure(2, weight=1)
+
+    navbarColumnHeaderTitleLabel = ttk.Label(Navbar, text="Title")
+    navbarColumnHeaderTitleLabel.grid(column=0, row=0, padx=5, pady=5)
+    navbarColumnHeaderTextLabel = ttk.Label(Navbar, text="Text")
+    navbarColumnHeaderTextLabel.grid(column=1, row=0, padx=5, pady=5)
+    navbarColumnHeaderLinkLabel = ttk.Label(Navbar, text="Link")
+    navbarColumnHeaderLinkLabel.grid(column=2, row=0, padx=5, pady=5)
+
+    print(type(db_collection_pageConfiguration.find({}, {})))
+
+    dataPageConfigurationNavbar = db_collection_pageConfiguration.find({}, {})
+    selectedTemplate = dataPageConfigurationNavbar[0]["configuration"]["selectedTemplate"]
+    dataPageConfigurationNavbarArticles = dataPageConfigurationNavbar[0]["configuration"]["templates"][selectedTemplate]["menu"]["articles"]
+
+
+    rowIndexNavbar = 0
+
+    for i,article in enumerate(dataPageConfigurationNavbarArticles):
+        print(article['title'])
+        articleEntryTitle = ttk.Entry(Navbar)
+        articleEntryTitle.grid(column=0, row=i + 1, padx=5, pady=5)
+        articleEntryTitle.insert(0, article["title"])
+        articleEntryText = ttk.Entry(Navbar)
+        articleEntryText.grid(column=1, row=i + 1, padx=5, pady=5)
+        articleEntryText.insert(0, article["text"])
+        articleEntryLink = ttk.Entry(Navbar)
+        articleEntryLink.grid(column=2, row=i + 1, padx=5, pady=5)
+        articleEntryLink.insert(0, article["link"])
+        rowIndexNavbar = i + 1
+        entriesArticles.append([articleEntryTitle, articleEntryText, articleEntryLink])
+
+    rowIndexNavbar += 1
+
+    saveArticlesNavbar = ttk.Button(Navbar, text="Save", command=save_articles)
+    saveArticlesNavbar.grid(column=1, row=rowIndexNavbar, padx=5, pady=5)
+
+
+def save_articles():   
+    global rowIndexNavbar
+    global selectedTemplate
+    # print(entriesArticles)
+    # print(rowIndexNavbar)
+    #dataPageConfigurationNavbar[0]["configuration"]["templates"][selectedTemplate]["menu"]["articles"]
+    newArticleValues = []
+
+    for row in entriesArticles:
+        newArticleValues.append({"title": row[0].get(), "text": row[1].get(), "link": row[2].get(), "visile": True})
+
+    db_collection_pageConfiguration.update_one({"_id":"pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(selectedTemplate)}.menu.articles": newArticleValues}})
+    print(newArticleValues)
+
+#########################################################################################################
+
+frameNews = {}
+
+
+
+def show_news_or_edit_content_news(page_name, type):
+    global sheetNews
+    global selectedTemplate
+    global dataPageConfigurationNewsComponents
+
+    print("POWINNO SIE WYSTWIELIC")
+    print(page_name)
+    print(frameNews)
+
+
+
+    if type == "Edit":
+        for widget in NewsEdit.winfo_children():
+            widget.destroy()
+
+        NewsEdit.columnconfigure(0, weight=1)
+        NewsEdit.columnconfigure(1, weight=1)
+        NewsEdit.columnconfigure(2, weight=1)
+        NewsEdit.columnconfigure(3, weight=1)
+
+        newsColumnHeaderTitleLabel = ttk.Label(NewsEdit, text="Title")
+        newsColumnHeaderTitleLabel.grid(column=0, row=1, padx=5, pady=5)
+        newsColumnHeaderTextLabel = ttk.Label(NewsEdit, text="Headline")
+        newsColumnHeaderTextLabel.grid(column=1, row=1, padx=5, pady=5)
+        newsColumnHeaderTextLabel = ttk.Label(NewsEdit, text="Text")
+        newsColumnHeaderTextLabel.grid(column=2, row=1, padx=5, pady=5)
+        newsColumnHeaderLinkLabel = ttk.Label(NewsEdit, text="Link")
+        newsColumnHeaderLinkLabel.grid(column=3, row=1, padx=5, pady=5)
+
+        rowIndexNavbar = 0
+
+        selectedRow = next(iter(sheetNews.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
+        print(sheetNews.get_row_data(selectedRow, return_copy = True)[0])
+
+
+        UsersButtonsFrameEditNews = ttk.Frame(NewsEdit, width=600)
+        UsersButtonsFrameEditNews.grid(column=1, columnspan=2, row=0, padx=5, pady=10)
+        cancelBtnNews = ttk.Button(UsersButtonsFrameEditNews, text="Cancel", command= lambda: show_news_or_edit_content_news("NewsDefault", "cancel"))
+        cancelBtnNews.pack()
+        #print(dataPageConfigurationNewsComponents[sheetNews.get_row_data(selectedRow, return_copy = True)[0]])
+
+        print()
+
+        for i,component in enumerate(dataPageConfigurationNewsComponents):
+            if component["name"] == sheetNews.get_row_data(selectedRow, return_copy = True)[0]:
+                for j,news in enumerate(component['news']):
+                    print(news)
+                    newsEntryTitle = ttk.Entry(NewsEdit, width=15)
+                    newsEntryTitle.grid(column=0, row=j + 2, padx=2, pady=5)
+                    newsEntryTitle.insert(0, news["title"])
+                    newsEntryHeadline = ttk.Entry(NewsEdit, width=15)
+                    newsEntryHeadline.grid(column=1, row=j + 2, padx=2, pady=5)
+                    newsEntryHeadline.insert(0, news["headline"])
+                    newsEntryText = ttk.Entry(NewsEdit, width=15)
+                    newsEntryText.grid(column=2, row=j + 2, padx=2, pady=5)
+                    newsEntryText.insert(0, news["text"])
+                    newsEntryLink = ttk.Entry(NewsEdit, width=15)
+                    newsEntryLink.grid(column=3, row=j + 2, padx=2, pady=5)
+                    newsEntryLink.insert(0, news["link"])
+                    rowIndexNavbar = j + 2
+                    #entriesArticles.append([articleEntryTitle, articleEntryText, articleEntryLink])
+
+        rowIndexNavbar += 1
+
+        UsersButtonsFrameEditNewsSave = ttk.Frame(NewsEdit, width=600)
+        UsersButtonsFrameEditNewsSave.grid(column=1, columnspan=2, row=rowIndexNavbar, padx=5, pady=15)
+        saveBtnNews = ttk.Button(UsersButtonsFrameEditNewsSave, text="Save", command= lambda: show_news_or_edit_content_news("NewsDefault", "cancel"))
+        saveBtnNews.pack()
+
+
+    for frame in frameNews.keys():
+        if frame == page_name:
+            frameNews[frame].pack()
+        else:
+            frameNews[frame].pack_forget()
+
+
+def load_data_to_news_sheet():
+    global sheetNews
+    global selectedTemplate
+    global dataPageConfigurationNewsComponents
+    dataPageConfigurationNews = db_collection_pageConfiguration.find({}, {})
+    selectedTemplate = dataPageConfigurationNews[0]["configuration"]["selectedTemplate"]
+    dataPageConfigurationNewsComponents = dataPageConfigurationNews[0]["configuration"]["templates"][selectedTemplate]["components"]
+
+    newsBlockNameArray = []
+
+    for component in dataPageConfigurationNewsComponents:
+        if len(component["news"]) > 0:
+            newsBlockNameArray.append(component["name"])
+
+    sheetNews.set_sheet_data([[newsBlockName] for newsBlockName in newsBlockNameArray])
+
+
+
+NewsEdit = ttk.Frame(News, width=600, height=300)
+NewsEdit.pack(side="left")
+NewsDefault = ttk.Frame(News, width=600, height=300)
+NewsDefault.pack(side="left")
+frameNews = {"NewsEdit": NewsEdit, "NewsDefault": NewsDefault}
+
+
+NewsEditButtonFrame = ttk.Frame(NewsDefault, width=300)
+NewsEditButtonFrame.pack(side="top")
+newsEditButton = ttk.Button(NewsEditButtonFrame, text="Edit", command=lambda: show_news_or_edit_content_news("NewsEdit", "Edit"))
+newsEditButton.pack(side="left", pady=10, padx=5)
+
+
+sheetNews = Sheet(NewsDefault, width=570, enable_edit_cell_auto_resize = False, column_width=390)
+sheetNews.pack(side="bottom")
+
+sheetNews.headers(newheaders = ["Block name"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
+#RAZ TRZEBA () A RAZ (()), NIE WIEM CZEMU
+sheetNews.enable_bindings(("row_select","single_select"))
+# load_data_to_sheet()
+
+show_news_or_edit_content_news("NewsDefault", "")
+
+
+
+
+
+
+#ustawienie wyswietlania
 
 window.mainloop()

@@ -116,18 +116,13 @@ TODO Send configuration json
 @app.route("/saveConfiguration", methods=["POST"])
 def saveConfiguration():
     data = request.get_json()
-    
-    print(type(data))
-    print(data)
-    #data = json.load(data)
-
 
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     db = myclient["cms"]
     db_collection_pageConfiguration = db["pageConfiguration"]
 
     try:
-        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, { "$set":  {"_id": "pageConfigurationSettings","configuration": data } }, upsert=False)
+        db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, { "$set":  {"configuration": data } }, upsert=False)
         return jsonify({"configuration": data})
     except Exception as exception:
         print("Page configuration is already set")
