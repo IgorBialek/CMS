@@ -129,11 +129,22 @@ def saveConfiguration():
         return jsonify({"configuration": db_collection_pageConfiguration.find_one({"_id": "pageConfigurationSettings"})})
 
 
+@app.route("/getConfiguration", methods=["GET"] )
+def getConfiguration():
+
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = myclient["cms"]
+    db_collection_pageConfiguration = db["pageConfiguration"]
+
+    return jsonify({"configuration": db_collection_pageConfiguration.find_one({"_id": "pageConfigurationSettings"})})
+
+
+
 """
 TODO Send users
 """
 
-@app.route("/getUsers", methods=["POST"] )
+@app.route("/getUsers", methods=["GET"] )
 def getUsers():
 
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -141,7 +152,7 @@ def getUsers():
     db_collection_users = db["users"]
 
     return jsonify({
-        "users": db_collection_users.find({}, {})
+        "users": list(db_collection_users.find({}, {}))
     })
 
 

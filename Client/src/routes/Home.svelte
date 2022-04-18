@@ -1,28 +1,15 @@
 <script>
   import { link, replace } from "svelte-spa-router";
   import { onMount, onDestroy } from "svelte";
-import Article from "./Article.svelte";
+  import Article from "./Article.svelte";
 
   let user = JSON.parse(localStorage.getItem("user"));
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let styles = configuration.templates[configuration.selectedTemplate].styles;
-  let components =
-    configuration.templates[configuration.selectedTemplate].components;
-  let menu = configuration.templates[configuration.selectedTemplate].menu;
-
-  let sliderSelectors = configuration.templates[
-    configuration.selectedTemplate
-  ].components
-    .map((comp, i) => {
-      return {
-        compIndex: i,
-        selectedImage: 0,
-        slider: comp.slider,
-      };
-    })
-    .filter((comp) => comp.slider);
-
+  let configuration = null;
+  let styles;
+  let components;
+  let menu;
+  let sliderSelectors;
   let intervals = [];
 
   const onInterval = (callback, milliseconds) => {
@@ -31,7 +18,25 @@ import Article from "./Article.svelte";
     intervals.push(interval);
   };
 
-  onMount(() => {
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+    styles = configuration.templates[configuration.selectedTemplate].styles;
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+    menu = configuration.templates[configuration.selectedTemplate].menu;
+    sliderSelectors = configuration.templates[
+      configuration.selectedTemplate
+    ].components
+      .map((comp, i) => {
+        return {
+          compIndex: i,
+          selectedImage: 0,
+          slider: comp.slider,
+        };
+      })
+      .filter((comp) => comp.slider);
+
     sliderSelectors.forEach((selector, i) => {
       if (selector.slider.images.length > 1) {
         onInterval(() => {
@@ -96,123 +101,129 @@ import Article from "./Article.svelte";
   };
 </script>
 
-<div
-  class="homeContainer"
-  style="--fontSize: {styles.fontSize}px  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
-    .colors.lightColor}; --mediumColor: {styles.colors
-    .mediumColor}; --darkColor: {styles.colors
-    .darkColor}; --navDirection: {menu.type == 'vertical' ? 'column' : 'none'}; --containerDirection:{menu.type == 'vertical' ? 'none' : 'column'}; --navWidth:{menu.type == 'vertical' ? '10%' : 'calc(100% - 30px)'}; --navJustify:{menu.type == 'vertical' ? 'flex-start' : 'space-between'}"
->
-  <nav>
-    <div class="navItems">
-      <a href="/#/Gallery">Gallery</a>
-      {#each menu.articles as article}
-        {#if article.visible}
-        <a href={`/#/article/${article.link}`}>{article.title}</a>
-        {/if}
-      {/each}
-    </div>
-    <div class="userActions">
-      {#if !user}
-        <a href="/#/Login" class="login">Login</a>
-        <a href="/#/Register" class="register">Register</a>
-      {/if}
-  
-      {#if user && user.permission == "admin"}
-        <a href="/#/Configuration" class="config">Configuration</a>
-        <a href="/#/Users" class="users">Users</a>
-      {/if}
-  
-      {#if user}
-        <a href="/" class="logout" on:click={logout}>Logout</a>
-      {/if}
-    </div>
-  </nav>
-
-
-
-  <div class="componentsContainer">
-    {#each components as comp, i}
-      {#if comp.visible}
-        <div id={comp.name} class="sectionContainer">
-          <!-- <h1>{comp.name}</h1> -->
-          {#if comp.slider}
-            <div class="sliderContainer">
-              <div class="sliderDescription">
-                <p>{comp.slider.description}</p>
-              </div>
-              <div
-                class="sliderDown"
-                on:click={() => {
-                  sliderSelectorChange("down", i);
-                }}
-              >
-                <p>{"<"}</p>
-              </div>
-              <div
-                class="sliderUp"
-                on:click={() => {
-                  sliderSelectorChange("up", i);
-                }}
-              >
-                <p>{">"}</p>
-              </div>
-              <img
-                alt="slider"
-                src={comp.slider.images[
-                  sliderSelectors.filter((slider) => slider.compIndex == i)[0]
-                    .selectedImage
-                ]}
-              />
-            </div>
+{#if configuration}
+  <div
+    class="homeContainer"
+    style="--fontSize: {styles.fontSize}px  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
+      .colors.lightColor}; --mediumColor: {styles.colors
+      .mediumColor}; --darkColor: {styles.colors
+      .darkColor}; --navDirection: {menu.type == 'vertical'
+      ? 'column'
+      : 'none'}; --containerDirection:{menu.type == 'vertical'
+      ? 'none'
+      : 'column'}; --navWidth:{menu.type == 'vertical'
+      ? '10%'
+      : 'calc(100% - 30px)'}; --navJustify:{menu.type == 'vertical'
+      ? 'flex-start'
+      : 'space-between'}"
+  >
+    <nav>
+      <div class="navItems">
+        <a href="/#/Gallery">Gallery</a>
+        {#each menu.articles as article}
+          {#if article.visible}
+            <a href={`/#/article/${article.link}`}>{article.title}</a>
           {/if}
-          {#if comp.news.length > 0}
-            <div class="newsContainer">
-              {#each comp.news as news}
-                <div class="newsSingle">
-                  <div class="newsTitle">{news.title}</div>
-                  <div class="newsContent">
-                    <h2>{news.headline}</h2>
-                    <p>{news.text}</p>
-                    <a href={`/#/${news.link}`}>Go to {news.link}</a>
-                  </div>
-                </div>
-              {/each}
-            </div>
-          {/if}
-          {#if comp.content}
-            <div class="contentContainer">
-              <div class="contentText">
-                <h2>{comp.content.title}</h2>
-                <p>{comp.content.text}</p>
-              </div>
-              <img alt="Nothing here" src={comp.content.image} />
-            </div>
-          {/if}
-        </div>
-      {/if}
-    {/each}
-    <footer>
-      <div class="footer">
-        {#each components as comp}
-          <a href={`#${comp.name}`}>{comp.name}</a>
         {/each}
       </div>
-      <div>Michał Dubrowski & Igor Białek 3P</div>
-    </footer>
-  </div>
+      <div class="userActions">
+        {#if !user}
+          <a href="/#/Login" class="login">Login</a>
+          <a href="/#/Register" class="register">Register</a>
+        {/if}
 
-  <!-- <div id="slider">
-        <div></div>
-        <div></div>
+        {#if user && user.permission == "admin"}
+          <a href="/#/Configuration" class="config">Configuration</a>
+          <a href="/#/Users" class="users">Users</a>
+        {/if}
+
+        {#if user}
+          <a href="/" class="logout" on:click={logout}>Logout</a>
+        {/if}
+      </div>
+    </nav>
+
+    <div class="componentsContainer">
+      {#each components as comp, i}
+        {#if comp.visible}
+          <div id={comp.name} class="sectionContainer">
+            <!-- <h1>{comp.name}</h1> -->
+            {#if comp.slider}
+              <div class="sliderContainer">
+                <div class="sliderDescription">
+                  <p>{comp.slider.description}</p>
+                </div>
+                <div
+                  class="sliderDown"
+                  on:click={() => {
+                    sliderSelectorChange("down", i);
+                  }}
+                >
+                  <p>{"<"}</p>
+                </div>
+                <div
+                  class="sliderUp"
+                  on:click={() => {
+                    sliderSelectorChange("up", i);
+                  }}
+                >
+                  <p>{">"}</p>
+                </div>
+                <img
+                  alt="slider"
+                  src={comp.slider.images[
+                    sliderSelectors.filter((slider) => slider.compIndex == i)[0]
+                      .selectedImage
+                  ]}
+                />
+              </div>
+            {/if}
+            {#if comp.news.length > 0}
+              <div class="newsContainer">
+                {#each comp.news as news}
+                  <div class="newsSingle">
+                    <div class="newsTitle">{news.title}</div>
+                    <div class="newsContent">
+                      <h2>{news.headline}</h2>
+                      <p>{news.text}</p>
+                      <a href={`/#/${news.link}`}>Go to {news.link}</a>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            {/if}
+            {#if comp.content}
+              <div class="contentContainer">
+                <div class="contentText">
+                  <h2>{comp.content.title}</h2>
+                  <p>{comp.content.text}</p>
+                </div>
+                <img alt="Nothing here" src={comp.content.image} />
+              </div>
+            {/if}
+          </div>
+        {/if}
+      {/each}
+      <footer>
+        <div class="footer">
+          {#each components as comp}
+            <a href={`#${comp.name}`}>{comp.name}</a>
+          {/each}
+        </div>
+        <div>Michał Dubrowski & Igor Białek 3P</div>
+      </footer>
     </div>
 
-    <div id="news"></div>
+    <!-- <div id="slider">
+      <div></div>
+      <div></div>
+  </div>
 
-    <main></main> -->
+  <div id="news"></div>
 
-
-</div>
+  <main></main> -->
+  </div>
+{/if}
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
@@ -303,8 +314,8 @@ font-family: 'Oswald', sans-serif;
     flex-direction: var(--containerDirection) !important;
     display: flex;
     margin: 0 !important;
-    font-size: var(--fontSize)  !important;
-    font-family: var(--fontFamily), sans-serif  !important;
+    font-size: var(--fontSize) !important;
+    font-family: var(--fontFamily), sans-serif !important;
   }
 
   nav {
@@ -353,8 +364,7 @@ font-family: 'Oswald', sans-serif;
   .login:hover,
   .register:hover,
   .logout:hover,
-  .config:hover
-  ,
+  .config:hover,
   .users:hover {
     text-decoration: none;
   }
