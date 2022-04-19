@@ -1,19 +1,26 @@
 <script>
-    export let params;
-    import saveHandler from "../../utils/saveHandler"
-    import moveComponent from "../../utils/moveComponent"
+  export let params;
+  import saveHandler from "../../utils/saveHandler";
+  import moveComponent from "../../utils/moveComponent";
 
-    let configuration = JSON.parse(localStorage.getItem("configuration"));
-    let components =
-    configuration.templates[configuration.selectedTemplate].components;
+  import { onMount } from "svelte";
+  let configuration;
+  let components = [];
+  let newsComponent = [];
 
-    let newsComponent = components.map((comp, i) => {
-    if (comp.news && i==params.wild) {
-      return { news: comp.news, compName: comp.name, compIndex: i };
-    }
-  }).filter(comp => comp)[0]
-
-
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+    newsComponent = components
+      .map((comp, i) => {
+        if (comp.news && i == params.wild) {
+          return { news: comp.news, compName: comp.name, compIndex: i };
+        }
+      })
+      .filter((comp) => comp)[0];
+  });
 
   const deleteNews = (newsIndex, compIndex) => {
     components = components.map((comp, i) => {
@@ -23,11 +30,13 @@
       return comp;
     });
 
-    newsComponent = components.map((comp, i) => {
-    if (comp.news && i==params.wild) {
-      return { news: comp.news, compName: comp.name, compIndex: i };
-    }
-  }).filter(comp => comp)[0]
+    newsComponent = components
+      .map((comp, i) => {
+        if (comp.news && i == params.wild) {
+          return { news: comp.news, compName: comp.name, compIndex: i };
+        }
+      })
+      .filter((comp) => comp)[0];
   };
 
   const addNews = (compIndex) => {
@@ -46,15 +55,18 @@
       return comp;
     });
 
-    newsComponent = components.map((comp, i) => {
-    if (comp.news && i==params.wild) {
-      return { news: comp.news, compName: comp.name, compIndex: i };
-    }
-  }).filter(comp => comp)[0]
+    newsComponent = components
+      .map((comp, i) => {
+        if (comp.news && i == params.wild) {
+          return { news: comp.news, compName: comp.name, compIndex: i };
+        }
+      })
+      .filter((comp) => comp)[0];
   };
 </script>
 
-<div class="configContainer">
+{#if configuration}
+  <div class="configContainer">
     <h1>Configure {newsComponent.compName} news</h1>
     <div class="componentContainer">
       {#each newsComponent.news as news, newsIndex}
@@ -62,9 +74,7 @@
           <hr />
         {/if}
         <div class="component">
-          <div
-            on:click={() => deleteNews(newsIndex, newsComponent.compIndex)}
-          >
+          <div on:click={() => deleteNews(newsIndex, newsComponent.compIndex)}>
             X
           </div>
           <div id="newsData">
@@ -113,13 +123,14 @@
           </div>
         </div>
       {/each}
-      <button on:click={() => addNews(newsComponent.compIndex)}>
-        ADD
-      </button>
+      <button on:click={() => addNews(newsComponent.compIndex)}> ADD </button>
     </div>
-    <button on:click="{() => {
-        configuration.templates[configuration.selectedTemplate].components = components
-        saveHandler(configuration)}}">SAVE</button>
-</div>
-
-
+    <button
+      on:click={() => {
+        configuration.templates[configuration.selectedTemplate].components =
+          components;
+        saveHandler(configuration);
+      }}>SAVE</button
+    >
+  </div>
+{/if}

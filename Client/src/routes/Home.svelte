@@ -132,6 +132,8 @@
           <a href="/#/Register" class="register">Register</a>
         {/if}
 
+        <a href="/#/Search" class="search">KURWA</a>
+
         {#if user && user.permission == "admin"}
           <a href="/#/Configuration" class="config">Configuration</a>
           <a href="/#/Users" class="users">Users</a>
@@ -357,7 +359,8 @@ font-family: 'Oswald', sans-serif;
   .register,
   .logout,
   .config,
-  .users {
+  .users,
+  .search {
     padding: 10px;
   }
 
@@ -365,7 +368,8 @@ font-family: 'Oswald', sans-serif;
   .register:hover,
   .logout:hover,
   .config:hover,
-  .users:hover {
+  .users:hover,
+  .search:hover {
     text-decoration: none;
   }
 
@@ -393,6 +397,13 @@ font-family: 'Oswald', sans-serif;
     border-radius: 10px;
     color: yellow;
   }
+
+  .search {
+    border: 2px solid pink;
+    border-radius: 10px;
+    color: pink;
+  }
+
   .componentsContainer {
     margin-top: 50px;
     display: flex;

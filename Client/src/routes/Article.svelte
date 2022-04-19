@@ -1,12 +1,18 @@
 <script>
   export let params;
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let article = configuration.templates[
-    configuration.selectedTemplate
-  ].menu.articles.filter((article) => article.link == params.wild)[0];
+  import { onMount } from "svelte";
+  let configuration;
+  let article = [];
 
-  console.log(article);
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+
+    article = configuration.templates[
+      configuration.selectedTemplate
+    ].menu.articles.filter((article) => article.link == params.wild)[0];
+  });
 </script>
 
 <div class="articleContainer">
@@ -21,7 +27,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
   }
 
   .articleContainer p {

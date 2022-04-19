@@ -1,9 +1,16 @@
 <script>
   import saveHandler from "../../utils/saveHandler";
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let components =
-    configuration.templates[configuration.selectedTemplate].components;
+  import { onMount } from "svelte";
+  let configuration;
+  let components = [];
+
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+  });
 
   const deleteComponent = (index) => {
     components = components.filter((comp, i) => i != index);

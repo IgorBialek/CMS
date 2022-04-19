@@ -2,15 +2,22 @@
   export let params;
   import saveHandler from "../../utils/saveHandler";
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let components =
-    configuration.templates[configuration.selectedTemplate].components;
+  import { onMount } from "svelte";
+  let configuration;
+  let components = [];
+  let contentComponent;
 
-  let contentComponent = components
-    .filter((comp, i) => comp.content && i == params.wild)
-    .map((comp, i) => {
-      return { content: comp.content, compName: comp.name, compIndex: i };
-    })[0];
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+    contentComponent = components
+      .filter((comp, i) => comp.content && i == params.wild)
+      .map((comp, i) => {
+        return { content: comp.content, compName: comp.name, compIndex: i };
+      })[0];
+  });
 
   const imageHandler = ({ target: { files } }) => {
     document.getElementById("uploadedImages").innerHTML = "";
@@ -29,36 +36,38 @@
   };
 </script>
 
-<div class="configContainer">
-  <h1>
-    Configure {contentComponent.compName} slider
-  </h1>
-  <div class="componentContainer">
-    <div class="inputs">
-      <div class="data">
-        <label>Title</label>
-        <input type="text" bind:value={contentComponent.content.title} />
+{#if configuration}
+  <div class="configContainer">
+    <h1>
+      Configure {contentComponent.compName} slider
+    </h1>
+    <div class="componentContainer">
+      <div class="inputs">
+        <div class="data">
+          <label>Title</label>
+          <input type="text" bind:value={contentComponent.content.title} />
+        </div>
+        <div class="data ">
+          <label>Text</label>
+          <input type="text" bind:value={contentComponent.content.text} />
+        </div>
+        <div class="data fileInput">
+          <label>Image</label>
+          <input type="file" accept=".jpg,.png" on:change={imageHandler} />
+        </div>
       </div>
-      <div class="data ">
-        <label>Text</label>
-        <input type="text" bind:value={contentComponent.content.text} />
-      </div>
-      <div class="data fileInput">
-        <label>Image</label>
-        <input type="file" accept=".jpg,.png" on:change={imageHandler} />
-      </div>
+      <div id="uploadedImages" />
     </div>
-    <div id="uploadedImages" />
+    <button
+      on:click={() => {
+        components.content = contentComponent.content;
+        configuration.templates[configuration.selectedTemplate].components =
+          components;
+        saveHandler(configuration);
+      }}>SAVE</button
+    >
   </div>
-  <button
-    on:click={() => {
-      components.content = contentComponent.content;
-      configuration.templates[configuration.selectedTemplate].components =
-        components;
-      saveHandler(configuration);
-    }}>SAVE</button
-  >
-</div>
+{/if}
 
 <style>
   #uploadedImages {

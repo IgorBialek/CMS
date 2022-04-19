@@ -1,21 +1,31 @@
 <script>
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let components =
-    configuration.templates[configuration.selectedTemplate].components;
+  import { onMount } from "svelte";
 
+  let configuration;
+  let components;
   let images = [];
 
-  components.forEach((comp) => {
-    if (comp.slider && comp.slider.images.length > 0) {
-      comp.slider.images.forEach((image) => images.push(image));
-    }
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
 
-    if (comp.content && comp.content.image) {
-      images.push(comp.content.image);
-    }
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+
+    images = [];
+
+    components.forEach((comp) => {
+      if (comp.slider && comp.slider.images.length > 0) {
+        comp.slider.images.forEach((image) => images.push(image));
+      }
+
+      if (comp.content && comp.content.image) {
+        images.push(comp.content.image);
+      }
+    });
+
+    images = [...new Set(images)];
   });
-
-  images = [...new Set(images)];
 
   const imageHandler = ({ target: { files } }) => {
     for (let i = 0; i < files.length; i++) {

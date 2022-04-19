@@ -2,7 +2,14 @@
   import { push } from "svelte-spa-router";
   import saveHandler from "../../utils/saveHandler";
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
+  import { onMount } from "svelte";
+  let configuration;
+
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+  });
+
   let newTemplateName = "";
 
   const addTemplate = () => {
@@ -87,30 +94,32 @@
   };
 </script>
 
-<div class="configContainer">
-  <!--CONFIGURE TEMPLATES-->
-  <h1>Configure templates</h1>
-  <div class="componentContainer">
-    <input type="text" bind:value={newTemplateName} />
-    <button on:click={addTemplate}>Add template</button>
-    <button on:click={importTemplate}>Import template (JSON)</button>
-    <div class="template">
-      <h2>Select template</h2>
-      <select
-        on:input={templateChangeHandler}
-        bind:value={configuration.selectedTemplate}
-      >
-        {#each configuration.templates as template, i}
-          <option value={i}>{template.name}</option>
-        {/each}
-      </select>
-      <button on:click={removeTemplate}>Remove selected template</button>
-      <button on:click={exportTemplate}>Export selected template</button>
+{#if configuration}
+  <div class="configContainer">
+    <!--CONFIGURE TEMPLATES-->
+    <h1>Configure templates</h1>
+    <div class="componentContainer">
+      <input type="text" bind:value={newTemplateName} />
+      <button on:click={addTemplate}>Add template</button>
+      <button on:click={importTemplate}>Import template (JSON)</button>
+      <div class="template">
+        <h2>Select template</h2>
+        <select
+          on:input={templateChangeHandler}
+          bind:value={configuration.selectedTemplate}
+        >
+          {#each configuration.templates as template, i}
+            <option value={i}>{template.name}</option>
+          {/each}
+        </select>
+        <button on:click={removeTemplate}>Remove selected template</button>
+        <button on:click={exportTemplate}>Export selected template</button>
+      </div>
     </div>
+    <button
+      on:click={() => {
+        saveHandler(configuration);
+      }}>SAVE</button
+    >
   </div>
-  <button
-    on:click={() => {
-      saveHandler(configuration);
-    }}>SAVE</button
-  >
-</div>
+{/if}

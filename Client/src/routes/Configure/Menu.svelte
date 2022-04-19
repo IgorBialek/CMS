@@ -3,8 +3,15 @@
   import moveComponent from "../../utils/moveComponent";
   import App from "../../App.svelte";
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let menu = configuration.templates[configuration.selectedTemplate].menu;
+  import { onMount } from "svelte";
+  let configuration;
+  let menu;
+
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+    menu = configuration.templates[configuration.selectedTemplate].menu;
+  });
 
   const deleteArticle = (index) => {
     menu.articles = menu.articles.filter((article, i) => i != index);
@@ -15,42 +22,44 @@
   };
 </script>
 
-<div class="configContainer">
-  <!--CONFIGURE MENU-->
-  <h1>Configure menu</h1>
-  <div class="componentContainer">
-    <div class="menu">
-      <div>
-        <label>Horizontal</label>
-        <input
-          type="radio"
-          name="menu"
-          checked={menu.type == "horizontal"}
-          on:change={() => {
-            menu.type = "horizontal";
-          }}
-        />
-      </div>
-      <div>
-        <label>Vertical</label>
-        <input
-          type="radio"
-          name="menu"
-          checked={menu.type == "vertical"}
-          on:change={() => {
-            menu.type = "vertical";
-          }}
-        />
+{#if configuration}
+  <div class="configContainer">
+    <!--CONFIGURE MENU-->
+    <h1>Configure menu</h1>
+    <div class="componentContainer">
+      <div class="menu">
+        <div>
+          <label>Horizontal</label>
+          <input
+            type="radio"
+            name="menu"
+            checked={menu.type == "horizontal"}
+            on:change={() => {
+              menu.type = "horizontal";
+            }}
+          />
+        </div>
+        <div>
+          <label>Vertical</label>
+          <input
+            type="radio"
+            name="menu"
+            checked={menu.type == "vertical"}
+            on:change={() => {
+              menu.type = "vertical";
+            }}
+          />
+        </div>
       </div>
     </div>
+    <button
+      on:click={() => {
+        configuration.templates[configuration.selectedTemplate].menu = menu;
+        saveHandler(configuration);
+      }}>SAVE</button
+    >
   </div>
-  <button
-    on:click={() => {
-      configuration.templates[configuration.selectedTemplate].menu = menu;
-      saveHandler(configuration);
-    }}>SAVE</button
-  >
-</div>
+{/if}
 
 <style>
   .menu {

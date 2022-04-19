@@ -2,15 +2,22 @@
   export let params;
   import saveHandler from "../../utils/saveHandler";
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let components =
-    configuration.templates[configuration.selectedTemplate].components;
+  import { onMount } from "svelte";
+  let configuration;
+  let components = [];
+  let sliderComponent = [];
 
-  let sliderComponent = components
-    .filter((comp, i) => comp.slider && i == params.wild)
-    .map((comp, i) => {
-      return { slider: comp.slider, compName: comp.name, compIndex: i };
-    })[0];
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+    sliderComponent = components
+      .filter((comp, i) => comp.slider && i == params.wild)
+      .map((comp, i) => {
+        return { slider: comp.slider, compName: comp.name, compIndex: i };
+      })[0];
+  });
 
   const imageHandler = ({ target: { files } }) => {
     document.getElementById("uploadedImages").innerHTML = "";
@@ -31,41 +38,43 @@
   };
 </script>
 
-<div class="configContainer">
-  <h1>
-    Configure {sliderComponent.compName} slider
-  </h1>
-  <div class="componentContainer">
-    <div class="inputs">
-      <div class="data fileInput">
-        <label>Images</label>
-        <input
-          type="file"
-          multiple
-          accept=".jpg,.png"
-          on:change={imageHandler}
-        />
+{#if configuration}
+  <div class="configContainer">
+    <h1>
+      Configure {sliderComponent.compName} slider
+    </h1>
+    <div class="componentContainer">
+      <div class="inputs">
+        <div class="data fileInput">
+          <label>Images</label>
+          <input
+            type="file"
+            multiple
+            accept=".jpg,.png"
+            on:change={imageHandler}
+          />
+        </div>
+        <div class="data">
+          <label>Description</label>
+          <input type="text" bind:value={sliderComponent.slider.description} />
+        </div>
+        <div class="data ">
+          <label>Switch time (seconds)</label>
+          <input type="number" bind:value={sliderComponent.slider.switchTime} />
+        </div>
       </div>
-      <div class="data">
-        <label>Description</label>
-        <input type="text" bind:value={sliderComponent.slider.description} />
-      </div>
-      <div class="data ">
-        <label>Switch time (seconds)</label>
-        <input type="number" bind:value={sliderComponent.slider.switchTime} />
-      </div>
+      <div id="uploadedImages" />
     </div>
-    <div id="uploadedImages" />
+    <button
+      on:click={() => {
+        components.slider = sliderComponent.slider;
+        configuration.templates[configuration.selectedTemplate].components =
+          components;
+        saveHandler(configuration);
+      }}>SAVE</button
+    >
   </div>
-  <button
-    on:click={() => {
-      components.slider = sliderComponent.slider;
-      configuration.templates[configuration.selectedTemplate].components =
-        components;
-      saveHandler(configuration);
-    }}>SAVE</button
-  >
-</div>
+{/if}
 
 <style>
   #uploadedImages {

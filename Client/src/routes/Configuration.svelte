@@ -1,13 +1,19 @@
 <script>
   import { push } from "svelte-spa-router";
+  import { onMount } from "svelte";
+  let configuration;
+  let components = [];
 
-  let configuration = JSON.parse(localStorage.getItem("configuration"));
-  let components =
-    configuration.templates[configuration.selectedTemplate].components;
+  onMount(async () => {
+    configuration = (await (await fetch("/getConfiguration")).json())
+      .configuration.configuration;
+
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+  });
 </script>
 
 <div class="configContainer">
-
   <h1>Configure anything you want</h1>
   <h2>Site</h2>
   <div class="blockContainer">
@@ -61,9 +67,10 @@
     {/each}
   </div>
   <button
-  on:click={() => {
-    push("/");
-  }}>Back to website</button>
+    on:click={() => {
+      push("/");
+    }}>Back to website</button
+  >
 </div>
 
 <style>

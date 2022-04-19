@@ -15,8 +15,9 @@
   import Slider from "./routes/Configure/Slider.svelte";
   import Gallery from "./routes/Gallery.svelte";
   import Content from "./routes/Configure/Content.svelte";
-import Articles from "./routes/Configure/Articles.svelte";
-import Users from "./routes/Users.svelte";
+  import Articles from "./routes/Configure/Articles.svelte";
+  import Users from "./routes/Users.svelte";
+  import Search from "./routes/Search.svelte";
 </script>
 
 <div class="container">
@@ -38,7 +39,8 @@ import Users from "./routes/Users.svelte";
       "/Configuration/Slider/*": Slider,
       "/Configuration/Content/*": Content,
       "/Article/*": Article,
-      "/Users": Users
+      "/Users": Users,
+      "/Search": Search,
     }}
   />
 </div>
