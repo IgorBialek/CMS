@@ -156,5 +156,21 @@ def getUsers():
     })
 
 
+@app.route("/updateUser", methods=["GET"] )
+def updateUser():
+    data = request.get_json()
+
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = myclient["cms"]
+    db_collection_users = db["users"]
+
+    try:
+        db_collection_users.delete_one({ "_id": data["email"]})
+        db_collection_users.insert_one({ "_id": data["email"], "password": data["password"], "permission": data["permission"] })
+        return jsonify({"message": "Operation complete"})
+    except Exception as exception:
+        return jsonify({"errorMessage": "Operation cannot be done"})
+
+
 if __name__ == "__main__":
     app.run(debug=True)

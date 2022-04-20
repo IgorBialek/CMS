@@ -236,7 +236,7 @@ sheet.pack()
 
 sheet.headers(newheaders = ["email", "password", "permission"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
 #RAZ TRZEBA () A RAZ (()), NIE WIEM CZEMU
-sheet.enable_bindings(("row_select","single_select"))
+sheet.enable_bindings("row_select","single_select")
 load_data_to_sheet()
 
 
@@ -360,8 +360,10 @@ def save_articles():
     #dataPageConfigurationNavbar[0]["configuration"]["templates"][selectedTemplate]["menu"]["articles"]
     newArticleValues = []
 
+    print(entriesArticles)
+
     for row in entriesArticles:
-        newArticleValues.append({"title": row[0].get(), "text": row[1].get(), "link": row[2].get(), "visile": True})
+        newArticleValues.append({"title": row[0].get(), "text": row[1].get(), "link": row[2].get(), "visible": True})
 
     db_collection_pageConfiguration.update_one({"_id":"pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(selectedTemplate)}.menu.articles": newArticleValues}})
     print(newArticleValues)
@@ -506,7 +508,7 @@ sheetNews.pack(side="bottom")
 
 sheetNews.headers(newheaders = ["Block name"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
 #RAZ TRZEBA () A RAZ (()), NIE WIEM CZEMU
-sheetNews.enable_bindings(("row_select","single_select"))
+sheetNews.enable_bindings("row_select","single_select")
 # load_data_to_sheet()
 
 show_news_or_edit_content_news("NewsDefault", "")
@@ -684,7 +686,7 @@ sheetSliders.pack(side="bottom")
 
 sheetSliders.headers(newheaders = ["Block name"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
 #RAZ TRZEBA () A RAZ (()), NIE WIEM CZEMU
-sheetSliders.enable_bindings(("row_select","single_select"))
+sheetSliders.enable_bindings("row_select","single_select")
 # load_data_to_sheet()
 
 show_sliders_or_edit_content_slider("SliderDefault", "")
