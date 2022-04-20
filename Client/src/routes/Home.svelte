@@ -127,21 +127,23 @@
         {/each}
       </div>
       <div class="userActions">
-        {#if !user}
-          <a href="/#/Login" class="login">Login</a>
-          <a href="/#/Register" class="register">Register</a>
-        {/if}
+
 
         <a href="/#/Search" class="search">KURWA</a>
 
         {#if user && user.permission == "admin"}
           <a href="/#/Configuration" class="config">Configuration</a>
-          <a href="/#/Users" class="users">Users</a>
         {/if}
 
         {#if user}
+          <a href="/#/Users" class="users">Users</a>
           <a href="/" class="logout" on:click={logout}>Logout</a>
         {/if}
+
+        {#if !user}
+        <a href="/#/Login" class="login">Login</a>
+        <a href="/#/Register" class="register">Register</a>
+      {/if}
       </div>
     </nav>
 
@@ -312,8 +314,7 @@ font-family: 'Oswald', sans-serif;
     text-shadow: black 0 0 5px;
   }
 
-  .homeContainer {
-    flex-direction: var(--containerDirection) !important;
+  .homeContainer {   flex-direction: var(--containerDirection) !important;
     display: flex;
     margin: 0 !important;
     font-size: var(--fontSize) !important;
@@ -405,6 +406,7 @@ font-family: 'Oswald', sans-serif;
   }
 
   .componentsContainer {
+    min-width: calc(100vw - var(--navWidth) - 30px);
     margin-top: 50px;
     display: flex;
     flex-direction: column;
@@ -469,6 +471,8 @@ font-family: 'Oswald', sans-serif;
   }
 
   .homeContainer {
+    overflow-x: hidden;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     margin: 25px;
@@ -482,12 +486,13 @@ font-family: 'Oswald', sans-serif;
     align-items: center;
     flex-direction: column;
     margin-bottom: 15px;
+    margin-top: auto;
   }
 
   .footer {
-    width: 33%;
-    margin: 15px;
+    width: 100%;
+    padding: 15px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
   }
 </style>

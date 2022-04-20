@@ -156,7 +156,7 @@ def getUsers():
     })
 
 
-@app.route("/updateUser", methods=["GET"] )
+@app.route("/updateUser", methods=["POST"] )
 def updateUser():
     data = request.get_json()
 
@@ -172,8 +172,9 @@ def updateUser():
         return jsonify({"errorMessage": "Operation cannot be done"})
 
 
-@app.route("/updateUsers", methods=["GET"] )
-def updateUser():
+@app.route("/updateUsers", methods=["POST"] )
+def updateUsers():
+    print(request.get_json())
     data_collection = request.get_json()
 
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
