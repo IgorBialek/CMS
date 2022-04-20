@@ -66,7 +66,7 @@
                   );
                 }}
               >
-                up
+                <img src="up-arrow.svg" />
               </div>
               <div
                 on:click={() => {
@@ -78,7 +78,7 @@
                   );
                 }}
               >
-                down
+                <img src="down-arrow.svg" />
               </div>
             </div>
           </div>

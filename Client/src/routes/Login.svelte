@@ -14,12 +14,12 @@
 
       //fetch server
       const res = await fetch("/login", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        });
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
 
       const response = await res.json();
 
@@ -27,7 +27,8 @@
 
       if (response.errorMessage) {
         errorMessage = response.errorMessage;
-          return
+        error = true;
+        return;
       }
 
       //Set user from response

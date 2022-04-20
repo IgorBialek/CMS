@@ -21,6 +21,18 @@
   <div class="searchContainer">
     <label>Search</label>
     <input type="text" bind:value={searchedPhrase} />
+    <div>
+      <button
+        on:click={() => {
+          articles = articles.sort((a, b) => a.title.localeCompare(b.title));
+        }}>asc</button
+      >
+      <button
+        on:click={() => {
+          articles = articles.sort((a, b) => b.title.localeCompare(a.title));
+        }}>desc</button
+      >
+    </div>
 
     <div class="searchResults">
       {#each articles.filter((article) => article.link

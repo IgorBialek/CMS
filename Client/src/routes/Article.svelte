@@ -16,8 +16,12 @@
 </script>
 
 <div class="articleContainer">
-  <h1>{article.title}</h1>
-  <p>{article.text}</p>
+  {#if article}
+    <h1>{article.title}</h1>
+    <p>{article.text}</p>
+  {:else}
+    <h1>No matching articles found!</h1>
+  {/if}
 </div>
 
 <style>

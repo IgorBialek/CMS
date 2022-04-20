@@ -90,6 +90,15 @@ button:focus {
   flex-direction: column;
 }
 
+.positionIndex img {
+  width: 15px;
+  height: 15px;
+}
+
+.positionIndex img:hover {
+  cursor: pointer;
+}
+
 label {
   margin: 5px;
 }

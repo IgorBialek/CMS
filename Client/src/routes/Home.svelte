@@ -127,11 +127,9 @@
         {/each}
       </div>
       <div class="userActions">
+        <a href="/#/Search" class="search">Search</a>
 
-
-        <a href="/#/Search" class="search">KURWA</a>
-
-        {#if user && user.permission == "admin"}
+        {#if user && user.permission != "user"}
           <a href="/#/Configuration" class="config">Configuration</a>
         {/if}
 
@@ -141,9 +139,9 @@
         {/if}
 
         {#if !user}
-        <a href="/#/Login" class="login">Login</a>
-        <a href="/#/Register" class="register">Register</a>
-      {/if}
+          <a href="/#/Login" class="login">Login</a>
+          <a href="/#/Register" class="register">Register</a>
+        {/if}
       </div>
     </nav>
 
@@ -190,7 +188,7 @@
                     <div class="newsContent">
                       <h2>{news.headline}</h2>
                       <p>{news.text}</p>
-                      <a href={`/#/${news.link}`}>Go to {news.link}</a>
+                      <a href={`/#/article/${news.link}`}>Go to news</a>
                     </div>
                   </div>
                 {/each}
@@ -314,7 +312,8 @@ font-family: 'Oswald', sans-serif;
     text-shadow: black 0 0 5px;
   }
 
-  .homeContainer {   flex-direction: var(--containerDirection) !important;
+  .homeContainer {
+    flex-direction: var(--containerDirection) !important;
     display: flex;
     margin: 0 !important;
     font-size: var(--fontSize) !important;
