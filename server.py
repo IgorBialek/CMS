@@ -172,5 +172,23 @@ def updateUser():
         return jsonify({"errorMessage": "Operation cannot be done"})
 
 
+@app.route("/updateUsers", methods=["GET"] )
+def updateUser():
+    data_collection = request.get_json()
+
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = myclient["cms"]
+    db_collection_users = db["users"]
+
+    for data in data_collection["users"]:
+        try:
+            db_collection_users.delete_one({ "_id": data["email"]})
+            db_collection_users.insert_one({ "_id": data["email"], "password": data["password"], "permission": data["permission"] })
+        except Exception as exception:
+            return jsonify({"errorMessage": "Operation cannot be done"})
+
+    return jsonify({"message": "Operation complete"})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
