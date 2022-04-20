@@ -2,13 +2,22 @@
   import { onMount } from "svelte";
   import saveUserHandler from "./../utils/saveUsersHandler"
 
+  let user = JSON.parse(localStorage.getItem("user"))
   let users = [];
   let repeatedPasswords = []
   let error = false
   let incorrectness = []
 
   onMount(async () => {
-    users = (await (await fetch("/getUsers")).json()).users;
+    if(user.permission != "admin") {
+      console.log(user)
+      users = (await (await fetch("/getUsers")).json()).users.filter(u => u._id == user.email)
+    }else {
+      users = (await (await fetch("/getUsers")).json()).users;
+    }
+
+
+
     users.forEach(user => {
       repeatedPasswords.push(user.password)
     });
@@ -32,16 +41,18 @@
     <div>Password</div>
     <div>Permission</div>
   </div> -->
-  {#each users as user, i}
+  {#each users as u, i}
     <div class="userContainer">
-      <input bind:value={user._id}/>
-      <input bind:value={user.password}/>
+      <input bind:value={u._id}/>
+      <input bind:value={u.password}/>
       <input bind:value={repeatedPasswords[i]}/>
-      <select bind:value={user.permission}>
+      {#if user.permission == "admin"}
+      <select bind:value={u.permission}>
         <option value="admin">admin</option>
         <option value="permitted">permitted</option>
         <option value="user">user</option>
       </select>
+      {/if}
     </div>
   {/each}
   <button

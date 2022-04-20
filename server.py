@@ -184,7 +184,7 @@ def updateUsers():
     for data in data_collection["users"]:
         try:
             db_collection_users.delete_one({ "_id": data["old_id"]})
-            db_collection_users.insert_one({ "_id": data["email"], "password": data["password"], "permission": data["permission"]})
+            db_collection_users.insert_one({ "_id": data["_id"], "password": data["password"], "permission": data["permission"]})
         except Exception as exception:
             return jsonify({"errorMessage": "Operation cannot be done"})
 
