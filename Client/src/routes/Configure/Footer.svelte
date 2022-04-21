@@ -88,7 +88,10 @@
 {/if}
 
 <style>
+
+
   .footerLinks {
+
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;

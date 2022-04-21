@@ -11,11 +11,11 @@ app = Flask(__name__)
 @app.route("/")
 def base():
 
-    initPageConfiguration = open("Client/public/initPageConfiguration.json")
+    initPageConfiguration = open("Client/public/initPageConfiguration.json", encoding="utf-8")
     data = json.load(initPageConfiguration)
 
-    print(type(data))
-    print(data)
+    # print(type(data))
+    # print(data)
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     db = myclient["cms"]
     db_collection_users = db["users"]    

@@ -3,7 +3,7 @@
 
   import { onMount } from "svelte";
   let configuration;
-  let article = [];
+  let article;
 
   onMount(async () => {
     configuration = (await (await fetch("/getConfiguration")).json())

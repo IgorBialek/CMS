@@ -95,17 +95,32 @@
   .blockContainer {
     width: 75%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 1000px){
+    .blockContainer {
+    width: 100% !important;
+  }
+  .blockContainer > div {
+    font-size: 3vw !important;
+    margin: 3vw !important;
+    width: 20vw !important;
+    height: 20vw !important;
+  }
+
   }
 
   .blockContainer > div {
+    font-size: 0.75vw;
     transition: 0.2s;
-    margin: 25px;
+    margin: 1vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     width: 6vw;
     height: 6vw;
     border: 1px solid black;

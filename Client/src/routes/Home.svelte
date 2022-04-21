@@ -104,7 +104,7 @@
 {#if configuration}
   <div
     class="homeContainer"
-    style="--fontSize: {styles.fontSize}px  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
+    style="--fontSize: calc({styles.fontSize / 20}vw + {styles.fontSize / 20}vh)  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
       .colors.lightColor}; --mediumColor: {styles.colors
       .mediumColor}; --darkColor: {styles.colors
       .darkColor}; --navDirection: {menu.type == 'vertical'
@@ -239,10 +239,26 @@ font-family: 'Oswald', sans-serif;
 
   .sectionContainer {
     width: 100%;
-    margin-bottom: 50px;
+
   }
 
+  .sectionContainer > div {
+    margin-top: 1.5vw;
+  }
+
+  @media (max-width: 1000px) {
+    .contentContainer {
+    flex-wrap: wrap;  
+  }
+
+  .contentText {
+    width: 100% !important;
+  }
+}
+
   .contentContainer {
+    text-align: justify !important;
+    text-justify: inter-word !important;
     width: 75%;
     display: flex;
     justify-content: space-around;
@@ -255,7 +271,6 @@ font-family: 'Oswald', sans-serif;
 
   .contentText {
     margin: 0 5% 0 0;
-    text-align: left;
     width: 66%;
     display: flex;
     flex-direction: column;
@@ -293,6 +308,13 @@ font-family: 'Oswald', sans-serif;
     margin: 0;
     font-size: 5vw;
     transition: 0.2s;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
   }
 
   .sliderDown > p:hover,
@@ -361,7 +383,12 @@ font-family: 'Oswald', sans-serif;
   .config,
   .users,
   .search {
+    padding: 5px;
+    color: rgb(68, 68, 68);
     padding: 10px;
+    background-color: white;
+    border-top-left-radius: 50%;
+    transition: 1s;
   }
 
   .login:hover,
@@ -371,47 +398,21 @@ font-family: 'Oswald', sans-serif;
   .users:hover,
   .search:hover {
     text-decoration: none;
+    transition: 1s;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 50%;
   }
 
-  .login,
-  .logout {
-    border: 2px solid green;
-    border-radius: 10px;
-    color: green;
-  }
-
-  .register {
-    border: 2px solid blue;
-    border-radius: 10px;
-    color: blue;
-  }
-
-  .config {
-    border: 2px solid orangered;
-    border-radius: 10px;
-    color: orangered;
-  }
-
-  .users {
-    border: 2px solid yellow;
-    border-radius: 10px;
-    color: yellow;
-  }
-
-  .search {
-    border: 2px solid pink;
-    border-radius: 10px;
-    color: pink;
-  }
 
   .componentsContainer {
     min-width: calc(100vw - var(--navWidth) - 30px);
-    margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
+
+    
   }
 
   .componentsContainer > div {
@@ -422,6 +423,8 @@ font-family: 'Oswald', sans-serif;
   }
 
   .newsContainer {
+    width: 100%;
+    background-color: var(--darkColor);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -429,7 +432,7 @@ font-family: 'Oswald', sans-serif;
   }
 
   .newsSingle {
-    margin: 50px;
+    margin: 1.5vw;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -465,7 +468,7 @@ font-family: 'Oswald', sans-serif;
   .newsContent a {
     padding: 10px;
     color: white;
-    background-color: var(--darkColor);
+    background-color: rgb(68, 68, 68);
     align-self: start;
   }
 
@@ -478,14 +481,16 @@ font-family: 'Oswald', sans-serif;
   }
 
   footer {
+    margin-top: 1.5vw;
+    color: white;
+    background-color: rgb(68, 68, 68);
     width: 100%;
     border-top: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 15px;
-    margin-top: auto;
+    padding-bottom: 15px;
   }
 
   .footer {
@@ -493,5 +498,14 @@ font-family: 'Oswald', sans-serif;
     padding: 15px;
     display: flex;
     justify-content: space-evenly;
+  }
+
+  footer a {
+    color: white;
+  }
+
+  footer div:nth-of-type(2) {
+    font-size: 16px;
+    color: gainsboro;
   }
 </style>

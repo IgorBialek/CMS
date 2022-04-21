@@ -35,13 +35,7 @@
     </div>
 
     <div class="searchResults">
-      {#each articles.filter((article) => article.link
-            .toLowerCase()
-            .includes(searchedPhrase.toLowerCase()) || article.text
-            .toLowerCase()
-            .includes(searchedPhrase.toLowerCase()) || article.title
-            .toLowerCase()
-            .includes(searchedPhrase.toLowerCase())) as article}
+      {#each articles.filter((article) =>  article.title.toLowerCase().includes(searchedPhrase.toLowerCase()))  as article}
         <div>
           <div>{article.title}</div>
           <button
@@ -68,14 +62,15 @@
   .searchResults {
     margin: 50px;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .searchResults > div {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin: 25px;
   }
