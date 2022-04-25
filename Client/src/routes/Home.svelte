@@ -104,7 +104,8 @@
 {#if configuration}
   <div
     class="homeContainer"
-    style="--fontSize: calc({styles.fontSize / 20}vw + {styles.fontSize / 20}vh)  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
+    style="--fontSize: calc({styles.fontSize / 20}vw + {styles.fontSize /
+      20}vh)  !important; --fontFamily: {styles.selectedFont} !important; --lightColor: {styles
       .colors.lightColor}; --mediumColor: {styles.colors
       .mediumColor}; --darkColor: {styles.colors
       .darkColor}; --navDirection: {menu.type == 'vertical'
@@ -239,7 +240,6 @@ font-family: 'Oswald', sans-serif;
 
   .sectionContainer {
     width: 100%;
-
   }
 
   .sectionContainer > div {
@@ -248,13 +248,13 @@ font-family: 'Oswald', sans-serif;
 
   @media (max-width: 1000px) {
     .contentContainer {
-    flex-wrap: wrap;  
-  }
+      flex-wrap: wrap;
+    }
 
-  .contentText {
-    width: 100% !important;
+    .contentText {
+      width: 100% !important;
+    }
   }
-}
 
   .contentContainer {
     text-align: justify !important;
@@ -279,7 +279,7 @@ font-family: 'Oswald', sans-serif;
   }
 
   .sliderContainer {
-    width: calc(100% - 100px);
+    width: calc(100%);
     height: 25vw;
     background-color: blue;
     position: relative;
@@ -310,10 +310,10 @@ font-family: 'Oswald', sans-serif;
     transition: 0.2s;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
   }
 
@@ -403,7 +403,6 @@ font-family: 'Oswald', sans-serif;
     border-bottom-right-radius: 50%;
   }
 
-
   .componentsContainer {
     min-width: calc(100vw - var(--navWidth) - 30px);
     display: flex;
@@ -411,8 +410,6 @@ font-family: 'Oswald', sans-serif;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-
-    
   }
 
   .componentsContainer > div {

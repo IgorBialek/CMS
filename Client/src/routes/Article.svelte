@@ -50,20 +50,28 @@
     <h1>{article.title}</h1>
     <p>{article.text}</p>
     <h2>Comments section</h2>
-    <div class="addComment">
-      <input type="text" placeholder="Your comment" bind:value={commentText} />
-      <button on:click={addHandler}>Add</button>
-    </div>
-    <div class="comments">
-      {#each article.comments as comment}
-        <div>
-          <p class="commentUser">{comment.user}</p>
-          <div class="commentTextContainer">
-            <p class="commentText">{comment.text}</p>
+    {#if user}
+      <div class="addComment">
+        <input
+          type="text"
+          placeholder="Your comment"
+          bind:value={commentText}
+        />
+        <button on:click={addHandler}>Add</button>
+      </div>
+    {/if}
+    {#if article.comments && article.comments.length > 0}
+      <div class="comments">
+        {#each article.comments as comment}
+          <div>
+            <p class="commentUser">{comment.user}</p>
+            <div class="commentTextContainer">
+              <p class="commentText">{comment.text}</p>
+            </div>
           </div>
-        </div>
-      {/each}
-    </div>
+        {/each}
+      </div>
+    {/if}
   {:else}
     <h1>No matching articles found!</h1>
   {/if}
