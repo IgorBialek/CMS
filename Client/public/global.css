@@ -135,3 +135,11 @@ button:hover {
   cursor: pointer;
   transition: 0.2s;
 }
+
+.verticalNav {
+  border-right: 1px solid #004cff;
+}
+
+.horizonalNav {
+  border-bottom: 1px solid #004cff;
+}

@@ -34,9 +34,6 @@
       <div>
         <a href="/#/Configuration/Component">Components</a>
       </div>
-      <div>
-        <a href="/#/Configuration/EditComponent">Edit Components</a>
-      </div>
     </div>
     <h2>News</h2>
     <div class="blockContainer">

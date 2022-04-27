@@ -39,7 +39,7 @@
 {#if configuration}
   <div class="configContainer">
     <h1>
-      Configure {contentComponent.compName} slider
+      Configure {contentComponent.compName} content
     </h1>
     <div class="componentContainer">
       <div class="inputs">

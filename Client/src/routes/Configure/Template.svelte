@@ -34,14 +34,18 @@
       },
     ];
 
+    configuration.selectedTemplate = configuration.templates.length - 1
     newTemplateName = "";
   };
 
   const removeTemplate = () => {
-    configuration.templates = configuration.templates.filter(
+    if(configuration.templates.length > 1) {
+      configuration.templates = configuration.templates.filter(
       (template, i) => configuration.selectedTemplate != i
     );
     configuration.selectedTemplate = 0;
+    }
+
   };
 
   const templateChangeHandler = (e) => {

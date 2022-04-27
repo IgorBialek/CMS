@@ -1,5 +1,6 @@
 <script>
   import saveHandler from "../../utils/saveHandler";
+  import moveComponent from "../../utils/moveComponent";
 
   import { onMount } from "svelte";
   let configuration;
@@ -116,7 +117,31 @@
     {#each components as comp, i}
       <div class="component">
         <div on:click={() => deleteComponent(i)}>X</div>
+        <div>
+          <input type="checkbox" bind:checked={comp.visible} />
+        </div>
         <input bind:value={comp.name} />
+        <div class="positionIndex">
+          <div
+            on:click={() => {
+              moveComponent(i, "up", components, (tab) => (components = tab));
+            }}
+          >
+            <img src="up-arrow.svg" />
+          </div>
+          <div
+            on:click={() => {
+              moveComponent(
+                i,
+                "down",
+                components,
+                (tab) => (components = tab)
+              );
+            }}
+          >
+            <img src="down-arrow.svg" />
+          </div>
+        </div>
         <div class="componentActions">
           {#if !comp.slider}
             <button on:click={() => addComponentSlider(i)}>Add slider</button>

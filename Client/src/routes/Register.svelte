@@ -29,20 +29,25 @@
 
       if (response.errorMessage) {
         errorMessage = response.errorMessage;
+        error = true
         return;
       }
 
       localStorage.setItem("user", JSON.stringify(response));
 
       replace("/");
-    } else {
-      errorMessage = "Please fill all inputs";
-    }
+    } 
   };
 
   const valid = () => {
-    if (email && password && repPassword && password == repPassword) {
-      return true;
+    if (email && password && repPassword) {
+      if(password == repPassword) {
+        console.log("AAAA")
+        return true
+      }else {
+        errorMessage = "Passwords are not the same";
+        return false
+      }
     } else {
       errorMessage = "Please fill all inputs";
       return false;

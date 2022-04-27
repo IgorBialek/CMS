@@ -10,7 +10,6 @@
   import Footer from "./routes/Configure/Footer.svelte";
   import Style from "./routes/Configure/Style.svelte";
   import Component from "./routes/Configure/Component.svelte";
-  import EditComponent from "./routes/Configure/EditComponent.svelte";
   import News from "./routes/Configure/News.svelte";
   import Slider from "./routes/Configure/Slider.svelte";
   import Gallery from "./routes/Gallery.svelte";
@@ -34,7 +33,6 @@
       "/Configuration/Footer": Footer,
       "/Configuration/Style": Style,
       "/Configuration/Component": Component,
-      "/Configuration/EditComponent": EditComponent,
       "/Configuration/News/*": News,
       "/Configuration/Slider/*": Slider,
       "/Configuration/Content/*": Content,

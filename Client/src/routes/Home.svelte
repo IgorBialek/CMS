@@ -118,8 +118,9 @@
       ? 'flex-start'
       : 'space-between'}"
   >
-    <nav>
+    <nav class={menu.type == "vertical" ? "verticalNav" : "horizontalNav"}>
       <div class="navItems">
+        <a href="/#/">Home</a>
         <a href="/#/Gallery">Gallery</a>
         {#each menu.articles as article}
           {#if article.visible}
@@ -343,8 +344,9 @@ font-family: 'Oswald', sans-serif;
   }
 
   nav {
+    font-weight: bold;
     padding: 15px;
-    background-color: rgb(68, 68, 68);
+    background-color: white;
     width: var(--navWidth);
     position: relative;
     display: flex;
@@ -357,11 +359,16 @@ font-family: 'Oswald', sans-serif;
     display: flex;
     align-items: center;
     flex-direction: var(--navDirection);
-    display: flex;
+    flex-wrap: wrap;
+
   }
 
   .userActions > a {
+    color: white;
+    font-weight: bold;
     margin: 10px;
+    border-radius: 15px;
+
   }
 
   .navItems {
@@ -370,12 +377,22 @@ font-family: 'Oswald', sans-serif;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
+
   }
 
   .navItems > a {
     margin: 10px;
-    color: white;
+    color: rgb(24, 24, 24);
+    transition: 0.3s;
   }
+
+  .navItems > a:hover {
+    color: #004cff;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+
 
   .login,
   .register,
@@ -383,12 +400,11 @@ font-family: 'Oswald', sans-serif;
   .config,
   .users,
   .search {
-    padding: 5px;
-    color: rgb(68, 68, 68);
-    padding: 10px;
-    background-color: white;
-    border-top-left-radius: 50%;
-    transition: 1s;
+    transition: 0.5s;
+    padding: 10px 20px;
+    color: rgb(24, 24, 24);
+
+    background-color:#004cff ;
   }
 
   .login:hover,
@@ -397,10 +413,10 @@ font-family: 'Oswald', sans-serif;
   .config:hover,
   .users:hover,
   .search:hover {
+    transition: 0.5s;
+    box-shadow: 0px 0px 10px -5px #004cff;
+    background-color: #0031a6;
     text-decoration: none;
-    transition: 1s;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 50%;
   }
 
   .componentsContainer {
@@ -478,11 +494,10 @@ font-family: 'Oswald', sans-serif;
   }
 
   footer {
+    font-weight: bold;
     margin-top: 1.5vw;
-    color: white;
-    background-color: rgb(68, 68, 68);
     width: 100%;
-    border-top: 1px solid black;
+    border-top: 1px solid #004cff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -495,14 +510,22 @@ font-family: 'Oswald', sans-serif;
     padding: 15px;
     display: flex;
     justify-content: space-evenly;
+
   }
 
-  footer a {
-    color: white;
+  .footer a {
+    color: #004cff;
+    transition: 0.3s;
+  }
+
+  .footer a:hover {
+    transition: 0.3s;
+    text-decoration: none;
+    color: rgb(24, 24, 24);
   }
 
   footer div:nth-of-type(2) {
     font-size: 16px;
-    color: gainsboro;
+    color: rgb(24, 24, 24);
   }
 </style>
