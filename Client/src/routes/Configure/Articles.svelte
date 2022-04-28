@@ -35,10 +35,12 @@
               on:click={() => {
                 deleteArticle(i);
               }}
+              class="delete"
             >
-              X
+              <img src="delete.svg" />
             </div>
             <div>
+              <label>Visible</label>
               <input type="checkbox" bind:checked={article.visible} />
             </div>
             <div class="inputs">
@@ -104,16 +106,19 @@
   }
 
   .article {
+    margin: 20px 0;
     flex-grow: 1;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .inputs {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .inputs > div {

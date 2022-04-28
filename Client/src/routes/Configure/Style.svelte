@@ -51,7 +51,7 @@
       </div>
       <div class="newsContainer">
         <div class="newsSingle">
-          <div class="newsTitle">New's title</div>
+          <h1 class="newsTitle">New's title</h1>
           <div class="newsContent">
             <h2>New's headline</h2>
             <p>
@@ -81,10 +81,6 @@
 {/if}
 
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
-
   .fontContainer {
     display: flex;
     justify-content: space-evenly;
@@ -112,10 +108,11 @@
   }
 
   .newsTitle {
-    padding: 10px;
+    padding: 15px;
     background-color: var(--mediumColor);
     text-align: left;
     color: white;
+    margin: 0 !important;
   }
 
   .newsContent h2 {

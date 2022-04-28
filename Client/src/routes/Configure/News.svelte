@@ -70,12 +70,9 @@
     <h1>Configure {newsComponent.compName} news</h1>
     <div class="componentContainer">
       {#each newsComponent.news as news, newsIndex}
-        {#if newsIndex != 0}
-          <hr />
-        {/if}
         <div class="component">
           <div on:click={() => deleteNews(newsIndex, newsComponent.compIndex)}>
-            X
+            <img src="delete.svg" />
           </div>
           <div id="newsData">
             <div>
@@ -134,3 +131,16 @@
     >
   </div>
 {/if}
+
+<style>
+  #newsData {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #newsData input {
+    margin: 5px;
+  }
+</style>

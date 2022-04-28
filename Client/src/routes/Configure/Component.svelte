@@ -116,8 +116,11 @@
   <div class="componentContainer">
     {#each components as comp, i}
       <div class="component">
-        <div on:click={() => deleteComponent(i)}>X</div>
+        <div on:click={() => deleteComponent(i)} class="delete">
+          <img src="delete.svg" />
+        </div>
         <div>
+          <label>Visible</label>
           <input type="checkbox" bind:checked={comp.visible} />
         </div>
         <input bind:value={comp.name} />
@@ -131,12 +134,7 @@
           </div>
           <div
             on:click={() => {
-              moveComponent(
-                i,
-                "down",
-                components,
-                (tab) => (components = tab)
-              );
+              moveComponent(i, "down", components, (tab) => (components = tab));
             }}
           >
             <img src="down-arrow.svg" />
@@ -179,13 +177,15 @@
 <style>
   .componentActions {
     display: flex;
-    justify-content: space-between;
-    width: 50%;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
   .componentActions > button {
-    width: 30%;
-    margin: 5px;
+    width: 125px;
+    min-height: 64px;
+    margin: 0 25px;
   }
 
   .componentActions input {

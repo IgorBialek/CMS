@@ -75,4 +75,8 @@
     justify-content: center;
     align-items: center;
   }
+
+  .fileInput input {
+    width: 200px;
+  }
 </style>

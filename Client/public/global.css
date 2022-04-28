@@ -86,7 +86,8 @@ button:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 100px;
+  padding: 25px 0;
+  /* flex-wrap: wrap; */
 }
 
 .positionIndex {
@@ -142,14 +143,10 @@ button:hover {
   cursor: pointer;
 }
 
-.verticalNav {
-  border-right: 1px solid #004cff;
-}
-
-.horizonalNav {
-  border-bottom: 1px solid #004cff;
-}
-
 .error {
   color: red;
+}
+
+.delete:hover {
+  cursor: pointer;
 }

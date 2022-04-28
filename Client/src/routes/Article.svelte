@@ -1,6 +1,6 @@
 <script>
   export let params;
-  import {push} from 'svelte-spa-router'
+  import { push } from "svelte-spa-router";
 
   import { onMount } from "svelte";
   import saveComment from "./../utils/saveComment";
@@ -13,8 +13,7 @@
 
   let user = JSON.parse(localStorage.getItem("user"));
 
-  $: if(params.wild && configuration) {
-
+  $: if (params.wild && configuration) {
     article = configuration.templates[
       configuration.selectedTemplate
     ].menu.articles.filter((article) => article.link == params.wild)[0];
@@ -26,7 +25,6 @@
   }
 
   onMount(async () => {
-
     configuration = (await (await fetch("/getConfiguration")).json())
       .configuration.configuration;
 
@@ -87,7 +85,11 @@
       ? '10%'
       : 'calc(100% - 30px)'}; --navJustify:{menu.type == 'vertical'
       ? 'flex-start'
-      : 'space-between'}"
+      : 'space-between'}; --navBorderBottom:{menu.type == 'vertical'
+      ? 'none'
+      : '1px solid var(--mainColor)'}; --navBorderRight:{menu.type == 'vertical'
+      ? '1px solid var(--mainColor)'
+      : 'none'};"
   >
     <nav>
       <div class="navItems">
@@ -157,13 +159,8 @@
         <div>Michał Dubrowski & Igor Białek 3P</div>
       </footer>
     </div>
-
-
-
   </div>
-
 {/if}
-
 
 <style>
   .homeContainer {
@@ -238,7 +235,8 @@
     justify-content: var(--navJustify);
     align-items: center;
     flex-direction: var(--navDirection);
-    border-bottom: 1px solid #004cff;
+    border-bottom: var(--navBorderBottom);
+    border-right: var(--navBorderRight);
   }
 
   .userActions {
@@ -246,7 +244,6 @@
     align-items: center;
     flex-direction: var(--navDirection);
     flex-wrap: wrap;
-
   }
 
   .userActions > a {
@@ -254,7 +251,6 @@
     font-weight: bold;
     margin: 10px;
     border-radius: 15px;
-
   }
 
   .navItems {
@@ -263,7 +259,6 @@
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-
   }
 
   .navItems > a {
@@ -278,8 +273,6 @@
     transition: 0.3s;
   }
 
-
-
   .login,
   .register,
   .logout,
@@ -290,7 +283,7 @@
     padding: 10px 20px;
     color: rgb(24, 24, 24);
 
-    background-color:#004cff ;
+    background-color: #004cff;
   }
 
   .login:hover,
@@ -322,7 +315,6 @@
     padding: 15px 0;
     display: flex;
     justify-content: space-evenly;
-
   }
 
   .footer a {

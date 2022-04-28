@@ -63,7 +63,13 @@
           <input type="number" bind:value={sliderComponent.slider.switchTime} />
         </div>
       </div>
-      <div id="uploadedImages" />
+      <div id="uploadedImages">
+        {#each sliderComponent.slider.images as image}
+          <div style="height: 50px; width: 50px; margin: 10px;">
+            <img style="max-height: 100%;max-width: 100%;" src={image} />
+          </div>
+        {/each}
+      </div>
     </div>
     <button
       on:click={() => {
@@ -81,5 +87,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .fileInput input {
+    width: 200px;
   }
 </style>

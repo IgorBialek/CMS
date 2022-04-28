@@ -116,7 +116,11 @@
       ? '10%'
       : 'calc(100% - 30px)'}; --navJustify:{menu.type == 'vertical'
       ? 'flex-start'
-      : 'space-between'}"
+      : 'space-between'}; --navBorderBottom:{menu.type == 'vertical'
+      ? 'none'
+      : '1px solid var(--mainColor)'}; --navBorderRight:{menu.type == 'vertical'
+      ? '1px solid var(--mainColor)'
+      : 'none'};"
   >
     <nav class={menu.type == "vertical" ? "verticalNav" : "horizontalNav"}>
       <div class="navItems">
@@ -186,7 +190,7 @@
               <div class="newsContainer">
                 {#each comp.news as news}
                   <div class="newsSingle">
-                    <div class="newsTitle">{news.title}</div>
+                    <h1 class="newsTitle">{news.title}</h1>
                     <div class="newsContent">
                       <h2>{news.headline}</h2>
                       <p>{news.text}</p>
@@ -230,9 +234,6 @@
 {/if}
 
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
   /*
  font-family: 'Roboto', sans-serif;
  font-family: 'Quicksand', sans-serif;
@@ -353,6 +354,8 @@ font-family: 'Oswald', sans-serif;
     justify-content: var(--navJustify);
     align-items: center;
     flex-direction: var(--navDirection);
+    border-bottom: var(--navBorderBottom);
+    border-right: var(--navBorderRight);
   }
 
   .userActions {
@@ -360,7 +363,6 @@ font-family: 'Oswald', sans-serif;
     align-items: center;
     flex-direction: var(--navDirection);
     flex-wrap: wrap;
-
   }
 
   .userActions > a {
@@ -368,7 +370,6 @@ font-family: 'Oswald', sans-serif;
     font-weight: bold;
     margin: 10px;
     border-radius: 15px;
-
   }
 
   .navItems {
@@ -377,7 +378,6 @@ font-family: 'Oswald', sans-serif;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-
   }
 
   .navItems > a {
@@ -392,8 +392,6 @@ font-family: 'Oswald', sans-serif;
     transition: 0.3s;
   }
 
-
-
   .login,
   .register,
   .logout,
@@ -404,7 +402,7 @@ font-family: 'Oswald', sans-serif;
     padding: 10px 20px;
     color: rgb(24, 24, 24);
 
-    background-color:#004cff ;
+    background-color: #004cff;
   }
 
   .login:hover,
@@ -453,10 +451,11 @@ font-family: 'Oswald', sans-serif;
   }
 
   .newsTitle {
-    padding: 10px;
+    padding: 15px;
     background-color: var(--mediumColor);
     text-align: left;
     color: white;
+    margin: 0 !important;
   }
 
   .newsContent h2 {
@@ -465,6 +464,15 @@ font-family: 'Oswald', sans-serif;
 
   .newsContent a {
     margin-top: auto;
+    background-color: var(--mediumColor) !important;
+    transition: 0.5s;
+  }
+
+  .newsContent a:hover {
+    cursor: pointer;
+    transition: 0.5s;
+    background-color: var(--darkColor) !important;
+    text-decoration: none;
   }
 
   .newsContent {
@@ -510,7 +518,6 @@ font-family: 'Oswald', sans-serif;
     padding: 15px;
     display: flex;
     justify-content: space-evenly;
-
   }
 
   .footer a {
