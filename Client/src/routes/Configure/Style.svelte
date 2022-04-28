@@ -21,7 +21,7 @@
   >
     <!--CONFIGURE STYLES-->
     <h1>Configure styles</h1>
-    <div class="componentContainer">
+    <div class="componentContainer wrap">
       <div class="fontContainer">
         <div>
           <label>Font family</label>
@@ -88,6 +88,7 @@
   .fontContainer {
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap;
   }
 
   .newsContainer {

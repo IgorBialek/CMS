@@ -58,7 +58,7 @@
     <label>Password</label>
     <input type="password" autocomplete="new-password" bind:value={password} />
     {#if error}
-      <p>{errorMessage}</p>
+      <p class="error">{errorMessage}</p>
     {/if}
     <button class="userFormButton" on:click={handleRegister}>Login</button>
   </div>
@@ -71,6 +71,7 @@
     width: 100%;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
   }
 
   .userForm {

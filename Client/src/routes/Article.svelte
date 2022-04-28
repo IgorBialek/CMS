@@ -1,5 +1,6 @@
 <script>
   export let params;
+  import {push} from 'svelte-spa-router'
 
   import { onMount } from "svelte";
   import saveComment from "./../utils/saveComment";
@@ -12,7 +13,20 @@
 
   let user = JSON.parse(localStorage.getItem("user"));
 
+  $: if(params.wild && configuration) {
+
+    article = configuration.templates[
+      configuration.selectedTemplate
+    ].menu.articles.filter((article) => article.link == params.wild)[0];
+
+    styles = configuration.templates[configuration.selectedTemplate].styles;
+    components =
+      configuration.templates[configuration.selectedTemplate].components;
+    menu = configuration.templates[configuration.selectedTemplate].menu;
+  }
+
   onMount(async () => {
+
     configuration = (await (await fetch("/getConfiguration")).json())
       .configuration.configuration;
 

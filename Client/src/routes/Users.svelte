@@ -26,34 +26,68 @@
   const validate = () => {
     incorrectness = users.filter((user, i) => user.password != repeatedPasswords[i]).length
 
-    if(incorrectness > 0) {
+    let nameError = false
+
+    users.forEach((u,i) => {
+      users.forEach((u_two, i_two) => {
+        if(!nameError) {
+          if(u._id == u_two._id && i != i_two) {
+            console.log("AAA")
+          nameError = true
+          
+        }
+        }
+
+      })
+    })
+
+    console.log(nameError)
+
+    if(incorrectness > 0 ||nameError) {
       error = true
     }
     else {
       error = false
     }
+
+    console.log("ERROR", error)
   }
 </script>
 
 <div class="usersContainer">
-  <!-- <div class="userContainer title">
-    <div>Login</div>
-    <div>Password</div>
-    <div>Permission</div>
-  </div> -->
+  <div class="userContainer title">
+
+
+
+  </div>
   {#each users as u, i}
-    <div class="userContainer">
+   {#if u._id != "admin"}
+   <div class="userContainer">
+    <div>
+      <div>Login</div>
       <input bind:value={u._id}/>
-      <input bind:value={u.password}/>
-      <input bind:value={repeatedPasswords[i]}/>
-      {#if user.permission == "admin"}
-      <select bind:value={u.permission}>
-        <option value="admin">admin</option>
-        <option value="permitted">permitted</option>
-        <option value="user">user</option>
-      </select>
-      {/if}
     </div>
+    <div>
+      <div>Password</div>
+    <input bind:value={u.password}/>
+    </div>
+    
+<div>
+<div>Repeated Password</div>
+<input bind:value={repeatedPasswords[i]}/>
+</div>
+<div>
+<div>Permission</div>
+{#if user.permission == "admin"}
+<select bind:value={u.permission}>
+  <option value="admin">admin</option>
+  <option value="permitted">permitted</option>
+  <option value="user">user</option>
+</select>
+{/if}
+</div>
+  </div>
+   {/if}
   {/each}
   <button
       on:click={() => {
@@ -66,7 +100,7 @@ if(!error) {
       }}>SAVE</button
     >
     {#if error}
-    <h1>Some passwords are not the same</h1>
+    <h1 class="error">Some passwords are not the same or names are repeated</h1>
     {/if}
 </div>
 
@@ -87,12 +121,31 @@ if(!error) {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .userContainer > div {
-    width: 25%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .userContainer > div > div {
+    text-align: center;
+    font-size: 12px;
+    margin: 5px;
+  }
+
+  .userContainer input {
+    display: flex;
+    justify-content: center;
+    width: 300px;
     text-align: center;
   }
+
 
   .title {
     font-weight: bold;

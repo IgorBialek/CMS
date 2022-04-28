@@ -360,6 +360,7 @@ font-family: 'Oswald', sans-serif;
     align-items: center;
     flex-direction: var(--navDirection);
     flex-wrap: wrap;
+
   }
 
   .userActions > a {
@@ -367,6 +368,7 @@ font-family: 'Oswald', sans-serif;
     font-weight: bold;
     margin: 10px;
     border-radius: 15px;
+
   }
 
   .navItems {
@@ -375,6 +377,7 @@ font-family: 'Oswald', sans-serif;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
+
   }
 
   .navItems > a {
@@ -389,6 +392,8 @@ font-family: 'Oswald', sans-serif;
     transition: 0.3s;
   }
 
+
+
   .login,
   .register,
   .logout,
@@ -399,7 +404,7 @@ font-family: 'Oswald', sans-serif;
     padding: 10px 20px;
     color: rgb(24, 24, 24);
 
-    background-color: #004cff;
+    background-color:#004cff ;
   }
 
   .login:hover,
@@ -460,7 +465,6 @@ font-family: 'Oswald', sans-serif;
 
   .newsContent a {
     margin-top: auto;
-    background-color: var(--mediumColor) !important;
   }
 
   .newsContent {
@@ -506,6 +510,7 @@ font-family: 'Oswald', sans-serif;
     padding: 15px;
     display: flex;
     justify-content: space-evenly;
+
   }
 
   .footer a {

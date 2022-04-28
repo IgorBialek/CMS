@@ -72,6 +72,8 @@
           ...configuration.templates,
           JSON.parse(content),
         ];
+
+        configuration.selectedTemplate = configuration.templates.length - 1
       };
     };
 
@@ -103,7 +105,7 @@
     <!--CONFIGURE TEMPLATES-->
     <h1>Configure templates</h1>
     <div class="componentContainer">
-      <input type="text" bind:value={newTemplateName} />
+      <input type="text" bind:value={newTemplateName} placeholder="Template name"/>
       <button on:click={addTemplate}>Add template</button>
       <button on:click={importTemplate}>Import template (JSON)</button>
       <div class="template">

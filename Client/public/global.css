@@ -1,3 +1,7 @@
+:root {
+  --mainColor: #004cff;
+}
+
 body {
   color: #333;
   margin: 0;
@@ -45,8 +49,8 @@ input:disabled {
 }
 
 button {
-  color: #333;
-  background-color: #f4f4f4;
+  color: white;
+  background-color: var(--mainColor);
   outline: none;
 }
 
@@ -121,19 +125,21 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 button {
-  border: none;
-  padding: 10px;
-  margin: 10px;
-  font-size: 16px;
-  background-color: rgb(68, 68, 68);
+  transition: 0.5s;
+  padding: 10px 20px;
   color: white;
-  transition: 0.2s;
+  font-weight: bold;
+  margin: 10px;
+  border-radius: 15px;
+  background-color: #004cff;
 }
 
 button:hover {
-  background-color: rgb(27, 27, 27);
+  transition: 0.5s;
+  box-shadow: 0px 0px 10px -5px #004cff;
+  background-color: #0031a6;
+  text-decoration: none;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .verticalNav {
@@ -142,4 +148,8 @@ button:hover {
 
 .horizonalNav {
   border-bottom: 1px solid #004cff;
+}
+
+.error {
+  color: red;
 }

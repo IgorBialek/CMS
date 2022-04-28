@@ -69,7 +69,7 @@
       bind:value={repPassword}
     />
     {#if error}
-      <p>{errorMessage}</p>
+      <p class="error">{errorMessage}</p>
     {/if}
     <button class="userFormButton" on:click={handleRegister}>Register</button>
   </div>
@@ -82,6 +82,7 @@
     width: 100%;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
   }
 
   .userForm {

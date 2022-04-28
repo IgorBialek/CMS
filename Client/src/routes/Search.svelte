@@ -19,7 +19,7 @@
 
 {#if configuration}
   <div class="searchContainer">
-    <label>Search</label>
+    <label>Search articles on website</label>
     <input type="text" bind:value={searchedPhrase} />
     <div>
       <button
@@ -59,6 +59,11 @@
     margin: 100px 0;
   }
 
+  .searchContainer label {
+    font-size: 40px;
+    margin: 10px;
+  }
+
   .searchResults {
     margin: 50px;
     display: flex;
@@ -73,5 +78,6 @@
     justify-content: space-between;
     align-items: center;
     margin: 25px;
+    font-weight: bold;
   }
 </style>

@@ -27,20 +27,20 @@
     images = [...new Set(images)];
   });
 
-  const imageHandler = ({ target: { files } }) => {
-    for (let i = 0; i < files.length; i++) {
-      var reader = new FileReader();
+  // const imageHandler = ({ target: { files } }) => {
+  //   for (let i = 0; i < files.length; i++) {
+  //     var reader = new FileReader();
 
-      reader.onload = function (frEvent) {
-        images = [...images, frEvent.target.result];
-      };
-      reader.readAsDataURL(files[i]);
-    }
-  };
+  //     reader.onload = function (frEvent) {
+  //       images = [...images, frEvent.target.result];
+  //     };
+  //     reader.readAsDataURL(files[i]);
+  //   }
+  // };
 </script>
 
-<h1>FOR TEST PURPOSE</h1>
-<input type="file" multiple accept=".jpg,.png" on:change={imageHandler} />
+<!-- <h1>FOR TEST PURPOSE</h1>
+<input type="file" multiple accept=".jpg,.png" on:change={imageHandler} /> -->
 
 <div class="imagesContainer">
   {#each images as image}
@@ -56,6 +56,7 @@
   }
 
   .imagesContainer {
+    padding-top: 50px;
     width: 75%;
     margin: 0 auto;
     column-count: 4;
