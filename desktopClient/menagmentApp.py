@@ -5,7 +5,7 @@ from operator import index
 import tkinter as tk
 from tkinter import ttk
 import tkinter
-from turtle import right, title
+from turtle import bgcolor, right, title
 from ttkthemes import ThemedTk
 from tksheet import Sheet
 import pymongo
@@ -22,6 +22,7 @@ class App:
     def __init__(self, master):
         # super().__init__(master)
         #self.pack()
+        self.master = master
 
         self.myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         self.db = self.myclient["cms"]
@@ -37,7 +38,7 @@ class App:
             print("Admin already exists")
 
         self.notebookSections = ttk.Notebook(master)
-        self.notebookSections.pack(anchor='center', expand=True, pady=10)
+        #self.notebookSections.pack(anchor='center', expand=True, pady=10)
 
 
         self.Users = ttk.Frame(self.notebookSections, width=600, height=300)
@@ -56,8 +57,39 @@ class App:
         self.notebookSections.add(self.Slider, text="Slider")
         self.notebookSections.bind('<<NotebookTabChanged>>', self.on_tab_change)
 
+        self.show_login_dialog()
 
 
+    def show_login_dialog(self):
+        self.mainloginFrame = ttk.Frame(self.master,  height=100, width=100)
+        self.mainloginFrame.pack(anchor='center', expand=True)
+
+        loginFrameContent = ttk.Frame(self.mainloginFrame,  height=400, width=800)
+        loginFrameContent.pack(padx=60, pady=50)
+        
+        loginFrameLabelLogin = ttk.Label(loginFrameContent, text="Login")
+        loginFrameLabelLogin.pack()
+        self.loginFrameEntryLogin = ttk.Entry(loginFrameContent, width=25)
+        self.loginFrameEntryLogin.pack()
+
+        loginFrameLabelPassword = ttk.Label(loginFrameContent, text="Password")
+        loginFrameLabelPassword.pack()
+        self.loginFrameEntryPassword = ttk.Entry(loginFrameContent, width=25)
+        self.loginFrameEntryPassword.pack()
+
+        loginFrameButtonLogin = ttk.Button(loginFrameContent, text="Login", command= self.validate_login_dialog)
+        loginFrameButtonLogin.pack(pady=10, padx=5)
+
+        self.loginFrameLabelInfo = ttk.Label(loginFrameContent, text="")
+        self.loginFrameLabelInfo.pack()
+
+
+    def validate_login_dialog(self):
+        if self.loginFrameEntryLogin.get() == "admin" and self.loginFrameEntryPassword.get() == "admin":
+            self.mainloginFrame.pack_forget()
+            self.notebookSections.pack(anchor='center', expand=True, pady=10)
+        else:
+            self.loginFrameLabelInfo.config(text="Login or password is not correct")
 
     
     def init_users_tab(self):
@@ -256,11 +288,18 @@ class App:
     def delete_user(self):
         try:
             sheetData = next(iter(self.sheet.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
+            if self.sheet.get_row_data(sheetData, return_copy = True)[0] == "admin":
+                raise ValueError('A very specific bad thing happened.')
+
             self.db_collection_users.delete_one({"_id": self.sheet.get_row_data(sheetData, return_copy = True)[0], "password": self.sheet.get_row_data(sheetData, return_copy = True)[1], "permission": self.sheet.get_row_data(sheetData, return_copy = True)[2]})
             self.sheet.deselect(row = sheetData, column = None, cell = None, redraw = True)
             self.load_data_to_sheet()
+        except ValueError as valueException:
+                tk.messagebox.showinfo("showinfo", "You cannot delete main admin!")
+                return
         except Exception as exception:
             tk.messagebox.showinfo("showinfo", "User is not selected, you have to click on the number of row")
+            
 
     def show_users_or_edit_content(self, page_name, type):
 
@@ -519,6 +558,7 @@ class App:
     ############################SLIDER
     def show_sliders_or_edit_content_slider(self, page_name, type):
         isSelected = True
+        durationIsValid = True
 
         if type == "Edit":
             for widget in self.SliderEdit.winfo_children():
@@ -555,6 +595,7 @@ class App:
                         self.sliderEntryDuration = ttk.Entry(self.SliderEdit, width=15)
                         self.sliderEntryDuration.grid(column=1, row=2, padx=2, pady=5)
                         self.sliderEntryDuration.insert(0, str(component["slider"]["switchTime"]))
+                        self.sliderEntryDuration.config(validate="focusout", validatecommand=self.slider_duration_validate)
                         self.entriesSliderSettings.append([self.sliderEntryDescription, self.sliderEntryDuration])
 
                 rowIndexNavbar = 3
@@ -562,21 +603,39 @@ class App:
                 self.UsersButtonsFrameEditSlidersSave.grid(column=0, columnspan=2, row=rowIndexNavbar, padx=5, pady=15)
                 self.saveBtnSlider = ttk.Button(self.UsersButtonsFrameEditSlidersSave, text="Save", command= lambda: self.show_sliders_or_edit_content_slider("SliderDefault", "Save"))
                 self.saveBtnSlider.pack()
+                self.sliderLabelInfo = ttk.Label(self.UsersButtonsFrameEditSlidersSave, width=35)
+                self.sliderLabelInfo.pack()
+
             except Exception as exception:
                 isSelected = False
                 tk.messagebox.showinfo("showinfo", "Block slider is not selected, you have to click on the number of row")
         elif type == "Save":
-            self.db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(self.selectedTemplate)}.components.{str(self.selectedComponentIndexSlider)}.slider.description": self.entriesSliderSettings[0][0].get()}})
-            self.db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(self.selectedTemplate)}.components.{str(self.selectedComponentIndexSlider)}.slider.switchTime": self.entriesSliderSettings[0][1].get()}})
-            self.load_data_to_slider_sheet()
+            durationIsValid = self.sliderEntryDuration.validate()
+
+            if durationIsValid:
+                self.db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(self.selectedTemplate)}.components.{str(self.selectedComponentIndexSlider)}.slider.description": self.entriesSliderSettings[0][0].get()}})
+                self.db_collection_pageConfiguration.update_one({"_id": "pageConfigurationSettings"}, {"$set": {f"configuration.templates.{str(self.selectedTemplate)}.components.{str(self.selectedComponentIndexSlider)}.slider.switchTime": self.entriesSliderSettings[0][1].get()}})
+                self.load_data_to_slider_sheet()
     
-        if isSelected:
+        if isSelected and durationIsValid:
             for frame in self.frameSlider.keys():
                 if frame == page_name:
                     self.frameSlider[frame].pack()
                 else:
                     self.frameSlider[frame].pack_forget()
 
+
+    def slider_duration_validate(self):
+        print(self.sliderEntryDuration.get())
+        if self.sliderEntryDuration.get() != "":
+            try:
+                float(self.sliderEntryDuration.get())
+                return True
+            except ValueError:
+                self.sliderLabelInfo.config(text="Duration field has to be empty or a number")
+                return False
+        else:
+            return True
 
     def load_data_to_slider_sheet(self):
 
