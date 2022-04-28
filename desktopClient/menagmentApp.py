@@ -1,3 +1,4 @@
+from asyncio import events
 import enum
 from msilib.schema import Component
 from operator import index
@@ -85,6 +86,8 @@ class App:
         self.sheet.headers(newheaders = ["email", "password", "permission"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
         self.sheet.enable_bindings("row_select","single_select")
 
+        self.sheet.extra_bindings("all", self.select_whole_row)
+
         self.load_data_to_sheet()
 
         #USER EDIT
@@ -163,6 +166,8 @@ class App:
         self.sheetNews.pack(side="bottom")
         self.sheetNews.headers(newheaders = ["Block name"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
         self.sheetNews.enable_bindings("row_select","single_select")
+        self.sheetNews.extra_bindings("all", self.select_whole_row_news)
+
 
         self.show_news_or_edit_content_news("NewsDefault", "")
 
@@ -191,6 +196,8 @@ class App:
 
         self.sheetSliders.headers(newheaders = ["Block name"], index = None, reset_col_positions = False, show_headers_if_not_sheet = True)
         self.sheetSliders.enable_bindings("row_select","single_select")
+        self.sheetSliders.extra_bindings("all", self.select_whole_row_sliders)
+
 
         self.show_sliders_or_edit_content_slider("SliderDefault", "")
 
@@ -212,6 +219,22 @@ class App:
 
 
     ########################USERS
+
+    def select_whole_row(self, event = None):
+        if event[0] == "select_cell":
+            print(self.sheet.get_currently_selected(get_coords = False, return_nones_if_not = False)[0])
+            self.sheet.select_row(self.sheet.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
+
+    def select_whole_row_news(self, event = None):
+        if event[0] == "select_cell":
+            print(self.sheetNews.get_currently_selected(get_coords = False, return_nones_if_not = False)[0])
+            self.sheetNews.select_row(self.sheetNews.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
+
+
+    def select_whole_row_sliders(self, event = None):
+            if event[0] == "select_cell":
+                print(self.sheetSliders.get_currently_selected(get_coords = False, return_nones_if_not = False)[0])
+                self.sheetSliders.select_row(self.sheetSliders.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
 
     def load_data_to_sheet(self):
 
@@ -251,15 +274,20 @@ class App:
 
         if type == "edit":
             try:
-                sheetData = next(iter(self.sheet.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))  
+                sheetData = next(iter(self.sheet.get_selected_rows(get_cells = False, get_cells_as_rows = False, return_tuple = False)))                
+                if self.sheet.get_row_data(sheetData, return_copy = True)[0] == "admin":
+                    raise ValueError('A very specific bad thing happened.')
+
                 self.emailEntry.insert(0, self.sheet.get_row_data(sheetData, return_copy = True)[0])
                 self.passwordEntry.insert(0, self.sheet.get_row_data(sheetData, return_copy = True)[1])
                 self.passwordRepeatEntry.insert(0, self.sheet.get_row_data(sheetData, return_copy = True)[1])
                 self.permissionCombobox.set( self.sheet.get_row_data(sheetData, return_copy = True)[2])
                 self.typeOfSaving = "edit"
                 self.editedUserId = self.sheet.get_row_data(sheetData, return_copy = True)[0]
+            except ValueError as valueException:
+                tk.messagebox.showinfo("showinfo", "You cannot edit main admin!")
+                return
             except Exception as exception:
-                print("User is not selected")
                 tk.messagebox.showinfo("showinfo", "User is not selected, you have to click on the number of row")
                 return
         elif type == "add":
