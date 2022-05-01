@@ -12,6 +12,7 @@ import pymongo
 import re
 import ctypes
 import os
+import json
 
 myappid = 'appIcon.ico' # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -32,10 +33,21 @@ class App:
         master.configure(bg='#3dade9')
 
 
+        initPageConfiguration = open("Client/public/initPageConfiguration.json", encoding="utf-8")
+        data = json.load(initPageConfiguration)
+
+
         try:
             self.db_collection_users.insert_one({ "_id": "admin", "password": "admin", "permission": "admin"})
         except Exception as exception:
             print("Admin already exists")
+
+        try:
+            self.db_collection_pageConfiguration.insert_one({"_id": "pageConfigurationSettings", "configuration": data})
+        except Exception as exception:
+            print("Page configuration is already set")
+            
+        
 
         self.notebookSections = ttk.Notebook(master)
         #self.notebookSections.pack(anchor='center', expand=True, pady=10)
@@ -236,7 +248,6 @@ class App:
 
     def on_tab_change(self, event):
         tab = event.widget.tab('current')['text']
-        print(tab)
 
         if tab == "Users":
             self.load_data_to_sheet()
@@ -254,19 +265,16 @@ class App:
 
     def select_whole_row(self, event = None):
         if event[0] == "select_cell":
-            print(self.sheet.get_currently_selected(get_coords = False, return_nones_if_not = False)[0])
             self.sheet.select_row(self.sheet.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
 
     def select_whole_row_news(self, event = None):
         if event[0] == "select_cell":
-            print(self.sheetNews.get_currently_selected(get_coords = False, return_nones_if_not = False)[0])
             self.sheetNews.select_row(self.sheetNews.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
 
 
     def select_whole_row_sliders(self, event = None):
-            if event[0] == "select_cell":
-                print(self.sheetSliders.get_currently_selected(get_coords = False, return_nones_if_not = False)[0])
-                self.sheetSliders.select_row(self.sheetSliders.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
+        if event[0] == "select_cell":
+            self.sheetSliders.select_row(self.sheetSliders.get_currently_selected(get_coords = False, return_nones_if_not = False)[0], redraw = False)
 
     def load_data_to_sheet(self):
 
@@ -340,10 +348,6 @@ class App:
                 self.insert_user(self.emailEntry.get(), self.passwordEntry.get(), self.permissionCombobox.get())
 
 
-        print(page_name)
-        print(self.frames)
-
-
         if emailIsValid and passwordIsValid:
             for frame in self.frames.keys():
                 if frame == page_name:
@@ -392,7 +396,6 @@ class App:
         navbarColumnHeaderLinkLabel = ttk.Label(self.Navbar, text="Link")
         navbarColumnHeaderLinkLabel.grid(column=2, row=0, padx=5, pady=5)
 
-        #print(type(db_collection_pageConfiguration.find({}, {})))
 
         dataPageConfigurationNavbar = self.db_collection_pageConfiguration.find({}, {})
         self.selectedTemplate = dataPageConfigurationNavbar[0]["configuration"]["selectedTemplate"]
@@ -402,7 +405,6 @@ class App:
         rowIndexNavbar = 0
 
         for i,article in enumerate(self.dataPageConfigurationNavbarArticles):
-            print(article['title'])
             self.articleEntryTitle = ttk.Entry(self.Navbar)
             self.articleEntryTitle.grid(column=0, row=i + 1, padx=5, pady=5)
             self.articleEntryTitle.insert(0, article["title"])
@@ -471,7 +473,6 @@ class App:
                     if component["name"] == self.sheetNews.get_row_data(self.selectedRow, return_copy = True)[0]:
                         self.selectedComponentIndex = i
                         for j,news in enumerate(component['news']):
-                            print(news)
                             self.newsEntryTitle = ttk.Entry(self.NewsEdit, width=15)
                             self.newsEntryTitle.grid(column=0, row=j + 2, padx=2, pady=5)
                             self.newsEntryTitle.insert(0, news["title"])
@@ -626,7 +627,6 @@ class App:
 
 
     def slider_duration_validate(self):
-        print(self.sliderEntryDuration.get())
         if self.sliderEntryDuration.get() != "":
             try:
                 float(self.sliderEntryDuration.get())
@@ -647,7 +647,6 @@ class App:
 
 
         for component in self.dataPageConfigurationSlidersComponents:
-            print(component["name"])
             if component["slider"] != None:
                 self.slidersBlockNameArray.append(component["name"])
 

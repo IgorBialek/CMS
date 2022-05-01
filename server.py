@@ -44,8 +44,6 @@ def hello():
     return str(random.randint(0, 100))
 
 
-#dfddddddddddddd
-
 @app.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -68,7 +66,6 @@ def register():
             'permission': data["permission"]
         })
     except Exception as exception:
-        #assert type(exception).__name__ == 'NameError'
         return jsonify({
             'errorMessage': "This email is actually used"
         })
@@ -97,21 +94,6 @@ def login():
             'errorMessage': "Wrong password or email"
         })
 
-"""
-TODO Connect MongoDB
-Handle users
-Save configuration as one big JSON
-Figure out how to use GridFS to save images and what format of files you will need
-"""
-
-
-"""
-TODO Save configuration json
-"""
-
-"""
-TODO Send configuration json
-"""
 
 @app.route("/saveConfiguration", methods=["POST"])
 def saveConfiguration():
@@ -138,11 +120,6 @@ def getConfiguration():
 
     return jsonify({"configuration": db_collection_pageConfiguration.find_one({"_id": "pageConfigurationSettings"})})
 
-
-
-"""
-TODO Send users
-"""
 
 @app.route("/getUsers", methods=["GET"] )
 def getUsers():
