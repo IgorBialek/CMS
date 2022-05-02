@@ -11,7 +11,7 @@
     error = !valid();
 
     if (!error) {
-      let user = { email, password, permission: "admin" };
+      let user = { email, password, permission: "user" };
 
       //fetch server
       const res = await fetch("/register", {
@@ -29,24 +29,24 @@
 
       if (response.errorMessage) {
         errorMessage = response.errorMessage;
-        error = true
+        error = true;
         return;
       }
 
       localStorage.setItem("user", JSON.stringify(response));
 
       replace("/");
-    } 
+    }
   };
 
   const valid = () => {
     if (email && password && repPassword) {
-      if(password == repPassword) {
-        console.log("AAAA")
-        return true
-      }else {
+      if (password == repPassword) {
+        console.log("AAAA");
+        return true;
+      } else {
         errorMessage = "Passwords are not the same";
-        return false
+        return false;
       }
     } else {
       errorMessage = "Please fill all inputs";

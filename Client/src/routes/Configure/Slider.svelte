@@ -46,7 +46,7 @@
     <div class="componentContainer">
       <div class="inputs">
         <div class="data fileInput">
-          <label>Images</label>
+          <label>Images (Should have ratio similar to 1 / 4)</label>
           <input
             type="file"
             multiple

@@ -16,7 +16,7 @@
 
 <div class="configContainer">
   {#if user.permission == "admin"}
-    <h1>Configure anything you want</h1>
+    <h1>Configure Website</h1>
     <h2>Site</h2>
     <div class="blockContainer">
       <div>
@@ -97,17 +97,16 @@
     flex-wrap: wrap;
   }
 
-  @media (max-width: 1000px){
+  @media (max-width: 1000px) {
     .blockContainer {
-    width: 100% !important;
-  }
-  .blockContainer > div {
-    font-size: 3vw !important;
-    margin: 3vw !important;
-    width: 20vw !important;
-    height: 20vw !important;
-  }
-
+      width: 100% !important;
+    }
+    .blockContainer > div {
+      font-size: 3vw !important;
+      margin: 3vw !important;
+      width: 20vw !important;
+      height: 20vw !important;
+    }
   }
 
   .blockContainer > div {

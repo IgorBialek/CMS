@@ -34,18 +34,19 @@
       },
     ];
 
-    configuration.selectedTemplate = configuration.templates.length - 1
+    configuration.selectedTemplate = configuration.templates.length - 1;
     newTemplateName = "";
   };
 
   const removeTemplate = () => {
-    if(configuration.templates.length > 1) {
+    if (configuration.templates.length > 1) {
       configuration.templates = configuration.templates.filter(
-      (template, i) => configuration.selectedTemplate != i
-    );
-    configuration.selectedTemplate = 0;
+        (template, i) => configuration.selectedTemplate != i
+      );
+      configuration.selectedTemplate = 0;
+    } else {
+      alert("You must have at least one template");
     }
-
   };
 
   const templateChangeHandler = (e) => {
@@ -73,7 +74,7 @@
           JSON.parse(content),
         ];
 
-        configuration.selectedTemplate = configuration.templates.length - 1
+        configuration.selectedTemplate = configuration.templates.length - 1;
       };
     };
 
@@ -105,7 +106,11 @@
     <!--CONFIGURE TEMPLATES-->
     <h1>Configure templates</h1>
     <div class="componentContainer">
-      <input type="text" bind:value={newTemplateName} placeholder="Template name"/>
+      <input
+        type="text"
+        bind:value={newTemplateName}
+        placeholder="Template name"
+      />
       <button on:click={addTemplate}>Add template</button>
       <button on:click={importTemplate}>Import template (JSON)</button>
       <div class="template">

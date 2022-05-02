@@ -17,6 +17,7 @@
       .map((comp, i) => {
         return { content: comp.content, compName: comp.name, compIndex: i };
       })[0];
+    console.log(contentComponent);
   });
 
   const imageHandler = ({ target: { files } }) => {
@@ -56,7 +57,14 @@
           <input type="file" accept=".jpg,.png" on:change={imageHandler} />
         </div>
       </div>
-      <div id="uploadedImages" />
+      <div id="uploadedImages">
+        <div style="height: 50px; width: 50px; margin: 10px;">
+          <img
+            style="max-height: 100%;max-width: 100%;"
+            src={contentComponent.content.image}
+          />
+        </div>
+      </div>
     </div>
     <button
       on:click={() => {

@@ -369,6 +369,7 @@ font-family: 'Oswald', sans-serif;
     color: white;
     font-weight: bold;
     margin: 10px;
+    padding: 0.8vw;
     border-radius: 15px;
   }
 
@@ -384,6 +385,7 @@ font-family: 'Oswald', sans-serif;
     margin: 10px;
     color: rgb(24, 24, 24);
     transition: 0.3s;
+    text-align: center;
   }
 
   .navItems > a:hover {
@@ -443,6 +445,7 @@ font-family: 'Oswald', sans-serif;
   }
 
   .newsSingle {
+    width: 100%;
     margin: 1.5vw;
     display: flex;
     flex-direction: column;
