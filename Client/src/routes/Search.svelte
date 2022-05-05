@@ -35,7 +35,9 @@
     </div>
 
     <div class="searchResults">
-      {#each articles.filter((article) =>  article.title.toLowerCase().includes(searchedPhrase.toLowerCase()))  as article}
+      {#each articles.filter((article) => article.title
+          .toLowerCase()
+          .includes(searchedPhrase.toLowerCase())) as article}
         <div>
           <div>{article.title}</div>
           <button
@@ -51,6 +53,7 @@
 
 <style>
   .searchContainer {
+    text-align: center;
     display: flex;
     flex-direction: column;
     width: 100%;

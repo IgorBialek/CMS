@@ -77,7 +77,7 @@
             <div>Permission</div>
 
             <select bind:value={u.permission}>
-              <option value="admin">admin</option>
+              <!-- <option value="admin">admin</option> -->
               <option value="permitted">permitted</option>
               <option value="user">user</option>
             </select>

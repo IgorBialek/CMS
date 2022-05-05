@@ -115,7 +115,7 @@
   <h1>Configure components</h1>
   <div class="componentContainer">
     {#each components as comp, i}
-      <div class="component">
+      <div class="component comp">
         <div on:click={() => deleteComponent(i)} class="delete">
           <img src="delete.svg" />
         </div>
@@ -175,6 +175,10 @@
 </div>
 
 <style>
+  .comp {
+    flex-wrap: wrap;
+  }
+
   .componentActions {
     display: flex;
     justify-content: center;

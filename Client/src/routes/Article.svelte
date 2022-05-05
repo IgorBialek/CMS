@@ -213,6 +213,7 @@
     align-items: center;
     flex-direction: column;
     margin: 50px 0 0 0;
+    text-align: justify;
   }
 
   .articleContainer > p {
@@ -226,6 +227,7 @@
   }
 
   nav {
+    text-align: center;
     font-weight: bold;
     padding: 15px;
     background-color: white;
@@ -250,6 +252,7 @@
     color: white;
     font-weight: bold;
     margin: 10px;
+    padding: 0.8vw;
     border-radius: 15px;
   }
 
@@ -315,6 +318,7 @@
     padding: 15px 0;
     display: flex;
     justify-content: space-evenly;
+    font-size: calc(0.8vw + 0.8vh) !important;
   }
 
   .footer a {
