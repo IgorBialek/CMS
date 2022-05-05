@@ -159,7 +159,7 @@ class App:
         self.permissionLabel.pack(side="left")
         self.selected_role = tk.StringVar()
         self.permissionCombobox = ttk.Combobox(self.PermissionFrame, textvariable=self.selected_role, width=24, state = "readonly")
-        self.permissionCombobox['values'] = ["admin", "permitted", "user"]
+        self.permissionCombobox['values'] = ["permitted", "user"]
         self.permissionCombobox.pack(side="right")
 
 
