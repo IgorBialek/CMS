@@ -63,9 +63,9 @@ class App:
         self.init_slider_tab()
 
         self.notebookSections.add(self.Users, text="Users")
-        self.notebookSections.add(self.Navbar, text="Navbar")
+        self.notebookSections.add(self.Navbar, text="Navbar and articles")
         self.notebookSections.add(self.News, text="News")
-        self.notebookSections.add(self.Footer, text="Footer")
+        self.notebookSections.add(self.Footer, text="Footer and components")
         self.notebookSections.add(self.Slider, text="Slider")
         self.notebookSections.bind('<<NotebookTabChanged>>', self.on_tab_change)
 
