@@ -251,11 +251,11 @@ class App:
 
         if tab == "Users":
             self.load_data_to_sheet()
-        elif tab == "Navbar":
+        elif tab == "Navbar and articles":
             self.load_data_to_navbar_section()
         elif tab == "News":
             self.load_data_to_news_sheet()
-        elif tab == "Footer":
+        elif tab == "Footer and components":
             self.load_data_to_footer_section()
         elif tab == "Slider":
             self.load_data_to_slider_sheet()
