@@ -54,6 +54,7 @@
 </script>
 
 <div class="usersContainer">
+  <h1>Users</h1>
   <div class="userContainer title" />
   {#each users as u, i}
     {#if u._id != "admin"}
